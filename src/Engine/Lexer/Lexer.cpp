@@ -11,15 +11,17 @@ namespace Engine {
         char FileBuff::ReadChar() {
             char character;
             if (this->pointer + 1 < this->buffer.length()) {
+                this->prevcolumn = this->column;
+                this->prevrow = this->row;
                 this->pointer++;
                 character = this->buffer[this->pointer];
                 if (character == (char)'\n') {
-                    row++;
+                    this->row++;
                 } else {
-                    column++;
+                    this->column++;
                 }
             } else {
-                return NULL;
+                return (char)"";
             }
             return character;
         }
@@ -50,6 +52,16 @@ namespace Engine {
             } while (token.ident != eof);
         }
 
-        
+        Token Lexer::GetNextToken(FileBuff &filebuff) {
+            char nextchar;
+            std::string stringtoken = "";
+            nextchar = filebuff.ReadChar();
+            if (nextchar == (char)"\n") {
+                return this->GetNextToken(filebuff);
+            } else if (nextchar == (char)"") {
+                return Token(0, 0, eof, "");
+            }
+            return Token();
+        }
     }
 }

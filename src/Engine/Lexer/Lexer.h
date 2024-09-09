@@ -13,9 +13,11 @@ namespace Engine {
             private:
                 std::string buffer;
                 int pointer = 0;
-            public:
                 int column = 0;
                 int row = 0;
+            public:
+                int prevcolumn;
+                int prevrow;
                 std::string filename;
                 /**
                  * @brief Construct a new File Buff object
@@ -91,6 +93,27 @@ namespace Engine {
                  * @return Token The next token from the file buffer
                  */
                 Token GetNextToken(FileBuff &filebuff);
+                /**
+                 * @brief Extracts a number from the file buffer
+                 * 
+                 * @param filebuff The file buffer
+                 * @return std::string The number
+                 */
+                std::string LexNum(FileBuff &filebuff);
+                /**
+                 * @brief Extracts an identifier from the file buffer
+                 * 
+                 * @param filebuff The file buffer
+                 * @return std::string The idendifier
+                 */
+                std::string LexIdent(FileBuff &filebuff);
+                /**
+                 * @brief Extracts a string from the file buffer
+                 * 
+                 * @param filebuff The file buffer
+                 * @return std::string The String
+                 */
+                std::string LexStr(FileBuff &filebuff);
         };
     }
 }
