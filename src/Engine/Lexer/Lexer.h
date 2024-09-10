@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <ctype.h>
 
 namespace Engine {
     namespace Lexer {
@@ -13,9 +14,9 @@ namespace Engine {
             private:
                 std::string buffer;
                 int pointer = 0;
+            public:
                 int column = 0;
                 int row = 0;
-            public:
                 int prevcolumn;
                 int prevrow;
                 std::string filename;
@@ -39,6 +40,9 @@ namespace Engine {
         };
 
         enum TokenType { null, eof, illegal, ident, _int, _float, func, semi, openbracket, closebracket, cclosebracket, copenbracket, _return, add, sub, mul, div, assign, point, comma, include};
+        enum TokenType idents[12] = {semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, assign, point, comma};
+        char identschar[12] = {(char)";", (char)"(", (char)")", (char)"}", (char)"{", (char)"+", (char)"-", (char)"*", (char)"/", (char)"=", (char)".", (char)","};
+        std::string identsstr[12] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ","};
 
         /**
          * @brief Stores a token read from the lexer
@@ -97,23 +101,23 @@ namespace Engine {
                  * @brief Extracts a number from the file buffer
                  * 
                  * @param filebuff The file buffer
-                 * @return std::string The number
+                 * @return Token The Token
                  */
-                std::string LexNum(FileBuff &filebuff);
+                Token LexNum(FileBuff &filebuff);
                 /**
                  * @brief Extracts an identifier from the file buffer
                  * 
                  * @param filebuff The file buffer
-                 * @return std::string The idendifier
+                 * @return Token The Token
                  */
-                std::string LexIdent(FileBuff &filebuff);
+                Token LexIdent(FileBuff &filebuff);
                 /**
                  * @brief Extracts a string from the file buffer
                  * 
                  * @param filebuff The file buffer
-                 * @return std::string The String
+                 * @return Token The Token
                  */
-                std::string LexStr(FileBuff &filebuff);
+                Token LexStr(FileBuff &filebuff);
         };
     }
 }

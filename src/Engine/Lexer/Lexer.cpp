@@ -60,8 +60,52 @@ namespace Engine {
                 return this->GetNextToken(filebuff);
             } else if (nextchar == (char)"") {
                 return Token(0, 0, eof, "");
+            } else {
+                for (int i = 0; i < 12; i++) {
+                    if (identschar[i] == nextchar) {
+                        return Token(filebuff.prevcolumn, filebuff.prevrow, idents[i], identsstr[i]);
+                    }
+                }
+                if (isdigit(nextchar)) {
+                    filebuff.Backup();
+                    return this->LexNum(filebuff);
+                } else if (nextchar == (char)"\"") {
+                    filebuff.Backup();
+                    return this->LexStr(filebuff);
+                } else {
+                    filebuff.Backup();
+                    return this->LexIdent(filebuff);
+                }
             }
-            return Token();
+            return Token(filebuff.prevcolumn, filebuff.prevrow, illegal, "");
+        }
+
+        Token Lexer::LexNum(FileBuff &filebuff) {
+            char nextchar;
+            bool endnum = false;
+            std::string num = "";
+            bool haspoint = false;
+            int column = filebuff.column;
+            int row = filebuff.row;
+            do {
+                nextchar = filebuff.ReadChar();
+                if (isdigit(nextchar)) {
+                    num += nextchar;
+                } else if (nextchar == (char)".") {
+                    if (haspoint) {
+                        return Token(column, row, illegal, "");
+                    }
+                    num += nextchar;
+                    haspoint = true;
+                } else {
+                    endnum = true;
+                }
+            } while (!endnum);
+            if (haspoint) {
+                return Token(column, row, _float, num);
+            } else {
+                return Token(column, row, _int, num);
+            }
         }
     }
 }
