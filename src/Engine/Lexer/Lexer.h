@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <ctype.h>
+#include "../Logging/Errors.h"
 
 namespace Engine {
     namespace Lexer {
@@ -39,10 +41,8 @@ namespace Engine {
                 void Backup();
         };
 
-        enum TokenType { null, eof, illegal, ident, _int, _float, func, semi, openbracket, closebracket, cclosebracket, copenbracket, _return, add, sub, mul, div, assign, point, comma, include};
-        enum TokenType idents[12] = {semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, assign, point, comma};
-        char identschar[12] = {(char)";", (char)"(", (char)")", (char)"}", (char)"{", (char)"+", (char)"-", (char)"*", (char)"/", (char)"=", (char)".", (char)","};
-        std::string identsstr[12] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ","};
+
+        enum TokenType {null, illegal, eof, _float, _int, _string, greater, lesser, notequal, equal, ident, semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, mod, assign, point, comma, _return, func, _if, _and, _or, _not, _for, _while, _class, addassign, subassign, mulassign, divassign, modassign, greaterequal, lesserequal};
 
         /**
          * @brief Stores a token read from the lexer
@@ -69,55 +69,54 @@ namespace Engine {
             Token(int column, int row, enum TokenType ident, std::string value) : column(column), row(row), ident(ident), value(value) {}
         };
 
-        class Lexer {
-            public:
-                /**
-                 * @brief Construct a new Lexer object
-                 * 
-                 */
-                Lexer() {};
-                /**
-                 * @brief Performs lexical analysis on the file
-                 * 
-                 * @param filename The name of the file to perform the analysis on
-                 * @param out A pointer to the tokens from analysis
-                 */
-                void Analysis(std::string filename, std::vector<Token> *out);
-                /**
-                 * @brief Get the Tokens in a file buffer
-                 * 
-                 * @param filebuff The file buffer
-                 * @param out A pointer to the tokens from the file
-                 */
-                void GetTokens(FileBuff &filebuff, std::vector<Token> *out);
-                /**
-                 * @brief Get the Next Token object
-                 * 
-                 * @param filebuff The file buffer
-                 * @return Token The next token from the file buffer
-                 */
-                Token GetNextToken(FileBuff &filebuff);
-                /**
-                 * @brief Extracts a number from the file buffer
-                 * 
-                 * @param filebuff The file buffer
-                 * @return Token The Token
-                 */
-                Token LexNum(FileBuff &filebuff);
-                /**
-                 * @brief Extracts an identifier from the file buffer
-                 * 
-                 * @param filebuff The file buffer
-                 * @return Token The Token
-                 */
-                Token LexIdent(FileBuff &filebuff);
-                /**
-                 * @brief Extracts a string from the file buffer
-                 * 
-                 * @param filebuff The file buffer
-                 * @return Token The Token
-                 */
-                Token LexStr(FileBuff &filebuff);
-        };
+
+        /**
+         * @brief Performs lexical analysis on the file
+         * 
+         * @param filename The name of the file to perform the analysis on
+         * @param out A vector to store the tokens from analysis
+         */
+        void Analysis(std::string filename, std::vector<Token> &out);
+        /**
+         * @brief Get the Tokens in a file buffer
+         * 
+         * @param filebuff The file buffer
+         * @param out A vector to store the tokens from the file
+         */
+        void GetTokens(FileBuff &filebuff, std::vector<Token> &out);
+        /**
+         * @brief Get the Next Token object
+         * 
+         * @param filebuff The file buffer
+         * @return Token The next token from the file buffer
+         */
+        Token GetNextToken(FileBuff &filebuff);
+        /**
+         * @brief Extracts a number from the file buffer
+         * 
+         * @param filebuff The file buffer
+         * @return Token The Token
+         */
+        Token LexNum(FileBuff &filebuff);
+        /**
+         * @brief Extracts an identifier from the file buffer
+         * 
+         * @param filebuff The file buffer
+         * @return Token The Token
+         */
+        Token LexIdent(FileBuff &filebuff);
+        /**
+         * @brief Extracts a string from the file buffer
+         * 
+         * @param filebuff The file buffer
+         * @return Token The Token
+         */
+        Token LexStr(FileBuff &filebuff);
+        /**
+         * @brief Combines tokens that mean different things when next to each other
+         * 
+         * @param out The vector of combined (or not) tokens
+         */
+        void CombineTokens(std::vector<Token> tokens, std::vector<Token> &out);
     }
 }

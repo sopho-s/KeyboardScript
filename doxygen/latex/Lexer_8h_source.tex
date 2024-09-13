@@ -1,0 +1,57 @@
+\doxysection{Lexer.\+h}
+\hypertarget{Lexer_8h_source}{}\label{Lexer_8h_source}\index{Engine/Lexer/Lexer.h@{Engine/Lexer/Lexer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00001}00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00006}00006\ \textcolor{preprocessor}{\#include\ <ctype.h>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}../Logging/Errors.h"{}}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00009}00009\ \textcolor{keyword}{namespace\ }Engine\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00010}00010\ \ \ \ \ \textcolor{keyword}{namespace\ }Lexer\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00015}\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{00015}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00016}00016\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ buffer;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00018}00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pointer\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00020}00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ column\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ row\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ prevcolumn;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ prevrow;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ filename;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff_a5c670a89b73dd17de42252ecc26173d0}{FileBuff}}(std::string\ filename);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff_a0d922aedccf0b872fa275c301656778b}{ReadChar}}();}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff_a69803ce95084547d8a349aa2d226fbda}{Backup}}();}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00042}00042\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ TokenType\ \{\ null,\ illegal,\ eof,\ \_float,\ \_int,\ \_string,\ greater,\ lesser,\ notequal,\ equal,\ ident,\ semi,\ openbracket,\ closebracket,\ cclosebracket,\ copenbracket,\ add,\ sub,\ mul,\ div,\ assign,\ point,\ comma,\ \_return,\ func,\ \_if,\ \_and,\ \_or,\ \_not,\ \_for,\ \_while,\ \_class\ \};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00051}\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{00051}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{Token}}\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ column;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ row;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ TokenType\ ident;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ value;}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00060}\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a1b12a262fcee6df79dffd07a34fdf9c3}{00060}}\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a1b12a262fcee6df79dffd07a34fdf9c3}{Token}}()\ \{\}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00069}\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a59ac46d0aaa0d932fef93f0df9a80531}{00069}}\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a59ac46d0aaa0d932fef93f0df9a80531}{Token}}(\textcolor{keywordtype}{int}\ column,\ \textcolor{keywordtype}{int}\ row,\ \textcolor{keyword}{enum}\ TokenType\ ident,\ std::string\ value)\ :\ column(column),\ row(row),\ ident(ident),\ value(value)\ \{\}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00070}00070\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00073}\mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer}{00073}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer}{Lexer}}\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00079}\mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_a0b4d72b4b62985b7799e51690348f2d8}{00079}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_a0b4d72b4b62985b7799e51690348f2d8}{Lexer}}()\ \{\};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_a10d88032ba2ef6e4d008a44c0ce2c06f}{Analysis}}(std::string\ filename,\ std::vector<Token>\ \&out);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_ab0a8ca7f21bb963704d8822ba55e0724}{GetTokens}}(\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \&filebuff,\ std::vector<Token>\ \&out);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{Token}}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_a76c00e67e9aee501b54848b9d303c72f}{GetNextToken}}(\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \&filebuff);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{Token}}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_ab7dc46a2ae0e40c0c37a88ae7a4e5c1d}{LexNum}}(\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \&filebuff);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{Token}}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_a1f23c241ad30fd6a507a699cb64cd04d}{LexIdent}}(\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \&filebuff);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token}{Token}}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_aa7583896d6dbe1bfc37b77f32fb0fa9b}{LexStr}}(\mbox{\hyperlink{classEngine_1_1Lexer_1_1FileBuff}{FileBuff}}\ \&filebuff);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00127}\mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_aace1da9935838a5cc25a9809ebfd66e2}{00127}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classEngine_1_1Lexer_1_1Lexer_aace1da9935838a5cc25a9809ebfd66e2}{CombineTokens}}(std::vector<Token>\ \&out);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00128}00128\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00129}00129\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00130}00130\ \}}
+
+\end{DoxyCode}

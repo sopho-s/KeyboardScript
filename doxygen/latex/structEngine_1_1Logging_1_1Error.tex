@@ -1,0 +1,115 @@
+\doxysection{Engine\+::Logging\+::Error Struct Reference}
+\hypertarget{structEngine_1_1Logging_1_1Error}{}\label{structEngine_1_1Logging_1_1Error}\index{Engine::Logging::Error@{Engine::Logging::Error}}
+
+
+Stores an error.  
+
+
+
+
+{\ttfamily \#include $<$Errors.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structEngine_1_1Logging_1_1Error_a14e6454de4684d23c0556a1c1a62dee5}{Error}} (int column, int row, int code, std\+::string what)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{structEngine_1_1Logging_1_1Error}{Error} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structEngine_1_1Logging_1_1Error_a86b653efbec91a7f683442b4ea082da8}{column}}
+\item 
+int \mbox{\hyperlink{structEngine_1_1Logging_1_1Error_ad8315c0ff4005507d159db6d2968be23}{row}}
+\item 
+int \mbox{\hyperlink{structEngine_1_1Logging_1_1Error_af9541b70a97bd76456d1f4e97e554468}{code}}
+\item 
+std\+::string \mbox{\hyperlink{structEngine_1_1Logging_1_1Error_af84a72c0b92f6b44be682f433da89ba6}{what}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores an error. 
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00011}{11}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structEngine_1_1Logging_1_1Error_a14e6454de4684d23c0556a1c1a62dee5}\index{Engine::Logging::Error@{Engine::Logging::Error}!Error@{Error}}
+\index{Error@{Error}!Engine::Logging::Error@{Engine::Logging::Error}}
+\doxysubsubsection{\texorpdfstring{Error()}{Error()}}
+{\footnotesize\ttfamily \label{structEngine_1_1Logging_1_1Error_a14e6454de4684d23c0556a1c1a62dee5} 
+Engine\+::\+Logging\+::\+Error\+::\+Error (\begin{DoxyParamCaption}\item[{int}]{column}{, }\item[{int}]{row}{, }\item[{int}]{code}{, }\item[{std\+::string}]{what}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \doxylink{structEngine_1_1Logging_1_1Error}{Error} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em column} & Starting column of the error, -\/1 if not based on a token \\
+\hline
+{\em row} & Starting row of the error, -\/1 if not based on a token \\
+\hline
+{\em code} & \doxylink{structEngine_1_1Logging_1_1Error}{Error} code \\
+\hline
+{\em what} & String of what happened \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00024}{24}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00024\ :\ column(column),\ row(row),\ code(code),\ what(what)\ \{\}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structEngine_1_1Logging_1_1Error_af9541b70a97bd76456d1f4e97e554468}\index{Engine::Logging::Error@{Engine::Logging::Error}!code@{code}}
+\index{code@{code}!Engine::Logging::Error@{Engine::Logging::Error}}
+\doxysubsubsection{\texorpdfstring{code}{code}}
+{\footnotesize\ttfamily \label{structEngine_1_1Logging_1_1Error_af9541b70a97bd76456d1f4e97e554468} 
+int Engine\+::\+Logging\+::\+Error\+::code}
+
+
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00014}{14}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+\Hypertarget{structEngine_1_1Logging_1_1Error_a86b653efbec91a7f683442b4ea082da8}\index{Engine::Logging::Error@{Engine::Logging::Error}!column@{column}}
+\index{column@{column}!Engine::Logging::Error@{Engine::Logging::Error}}
+\doxysubsubsection{\texorpdfstring{column}{column}}
+{\footnotesize\ttfamily \label{structEngine_1_1Logging_1_1Error_a86b653efbec91a7f683442b4ea082da8} 
+int Engine\+::\+Logging\+::\+Error\+::column}
+
+
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00012}{12}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+\Hypertarget{structEngine_1_1Logging_1_1Error_ad8315c0ff4005507d159db6d2968be23}\index{Engine::Logging::Error@{Engine::Logging::Error}!row@{row}}
+\index{row@{row}!Engine::Logging::Error@{Engine::Logging::Error}}
+\doxysubsubsection{\texorpdfstring{row}{row}}
+{\footnotesize\ttfamily \label{structEngine_1_1Logging_1_1Error_ad8315c0ff4005507d159db6d2968be23} 
+int Engine\+::\+Logging\+::\+Error\+::row}
+
+
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00013}{13}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+\Hypertarget{structEngine_1_1Logging_1_1Error_af84a72c0b92f6b44be682f433da89ba6}\index{Engine::Logging::Error@{Engine::Logging::Error}!what@{what}}
+\index{what@{what}!Engine::Logging::Error@{Engine::Logging::Error}}
+\doxysubsubsection{\texorpdfstring{what}{what}}
+{\footnotesize\ttfamily \label{structEngine_1_1Logging_1_1Error_af84a72c0b92f6b44be682f433da89ba6} 
+std\+::string Engine\+::\+Logging\+::\+Error\+::what}
+
+
+
+Definition at line \mbox{\hyperlink{Errors_8h_source_l00015}{15}} of file \mbox{\hyperlink{Errors_8h_source}{Errors.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Engine/\+Logging/Errors.\+h\end{DoxyCompactItemize}

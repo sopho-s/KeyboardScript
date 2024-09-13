@@ -1,0 +1,136 @@
+\doxysection{Engine\+::Lexer\+::Token Struct Reference}
+\hypertarget{structEngine_1_1Lexer_1_1Token}{}\label{structEngine_1_1Lexer_1_1Token}\index{Engine::Lexer::Token@{Engine::Lexer::Token}}
+
+
+Stores a token read from the lexer.  
+
+
+
+
+{\ttfamily \#include $<$Lexer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a1b12a262fcee6df79dffd07a34fdf9c3}{Token}} ()
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{structEngine_1_1Lexer_1_1Token}{Token} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a59ac46d0aaa0d932fef93f0df9a80531}{Token}} (int column, int row, enum Token\+Type ident, std\+::string value)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{structEngine_1_1Lexer_1_1Token}{Token} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a26db7fccb69143b2bf4e4b29e4c3dcf2}{column}}
+\item 
+int \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_ab08f0aea5fe4d7067e70d9f814e5b745}{row}}
+\item 
+enum Token\+Type \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a8487a7800b5d718d4b6edf39c981a332}{ident}}
+\item 
+std\+::string \mbox{\hyperlink{structEngine_1_1Lexer_1_1Token_a0d9eff77e7ed1fd8c47fba017cf7a13e}{value}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores a token read from the lexer. 
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00051}{51}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structEngine_1_1Lexer_1_1Token_a1b12a262fcee6df79dffd07a34fdf9c3}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!Token@{Token}}
+\index{Token@{Token}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{Token()}{Token()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_a1b12a262fcee6df79dffd07a34fdf9c3} 
+Engine\+::\+Lexer\+::\+Token\+::\+Token (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \doxylink{structEngine_1_1Lexer_1_1Token}{Token} object. 
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00060}{60}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00060\ \{\}}
+
+\end{DoxyCode}
+\Hypertarget{structEngine_1_1Lexer_1_1Token_a59ac46d0aaa0d932fef93f0df9a80531}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!Token@{Token}}
+\index{Token@{Token}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{Token()}{Token()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_a59ac46d0aaa0d932fef93f0df9a80531} 
+Engine\+::\+Lexer\+::\+Token\+::\+Token (\begin{DoxyParamCaption}\item[{int}]{column}{, }\item[{int}]{row}{, }\item[{enum Token\+Type}]{ident}{, }\item[{std\+::string}]{value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \doxylink{structEngine_1_1Lexer_1_1Token}{Token} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em column} & Column of the start of the token \\
+\hline
+{\em row} & Row of the start of the token \\
+\hline
+{\em ident} & What type of token it is \\
+\hline
+{\em value} & The original value of the token \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00069}{69}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00069\ :\ column(column),\ row(row),\ ident(ident),\ value(value)\ \{\}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structEngine_1_1Lexer_1_1Token_a26db7fccb69143b2bf4e4b29e4c3dcf2}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!column@{column}}
+\index{column@{column}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{column}{column}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_a26db7fccb69143b2bf4e4b29e4c3dcf2} 
+int Engine\+::\+Lexer\+::\+Token\+::column}
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00052}{52}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+\Hypertarget{structEngine_1_1Lexer_1_1Token_a8487a7800b5d718d4b6edf39c981a332}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!ident@{ident}}
+\index{ident@{ident}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{ident}{ident}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_a8487a7800b5d718d4b6edf39c981a332} 
+enum Token\+Type Engine\+::\+Lexer\+::\+Token\+::ident}
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00054}{54}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+\Hypertarget{structEngine_1_1Lexer_1_1Token_ab08f0aea5fe4d7067e70d9f814e5b745}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!row@{row}}
+\index{row@{row}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{row}{row}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_ab08f0aea5fe4d7067e70d9f814e5b745} 
+int Engine\+::\+Lexer\+::\+Token\+::row}
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00053}{53}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+\Hypertarget{structEngine_1_1Lexer_1_1Token_a0d9eff77e7ed1fd8c47fba017cf7a13e}\index{Engine::Lexer::Token@{Engine::Lexer::Token}!value@{value}}
+\index{value@{value}!Engine::Lexer::Token@{Engine::Lexer::Token}}
+\doxysubsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily \label{structEngine_1_1Lexer_1_1Token_a0d9eff77e7ed1fd8c47fba017cf7a13e} 
+std\+::string Engine\+::\+Lexer\+::\+Token\+::value}
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00055}{55}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Engine/\+Lexer/Lexer.\+h\end{DoxyCompactItemize}

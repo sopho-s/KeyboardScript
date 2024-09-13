@@ -1,0 +1,1 @@
+add_library(Logging Errors.cpp Errors.h)
