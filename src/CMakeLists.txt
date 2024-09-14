@@ -11,4 +11,5 @@ target_link_libraries(Key
     Logging
     Lexer
     Engine
-    ArgsParse)
+    ArgsParse
+    TreeGen)

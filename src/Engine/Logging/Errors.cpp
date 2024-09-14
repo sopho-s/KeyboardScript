@@ -61,7 +61,7 @@ namespace Engine {
         }
 
 
-        void Log(bool value) {
+        /*void Log(bool value) {
             infocount++;
             if (!infooff) {
                 if (value) {
@@ -70,7 +70,7 @@ namespace Engine {
                     std::cout << "[-] INFO: false" << std::endl;
                 }
             }
-        }
+        }*/
 
 
         int GetErrorCount() {

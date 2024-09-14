@@ -58,9 +58,7 @@ namespace Engine {
         void Analysis(std::string filename, std::vector<Token> &out) {
             FileBuff file = FileBuff(filename);
             GetTokens(file, out);
-            for (Token token : out) {
-                Logging::Log(Logging::Token(token.column, token.row, identenum[token.ident], token.value));
-            }
+            LogTokenList(out);
         }
 
 
@@ -211,6 +209,14 @@ namespace Engine {
                 } else {
                     skip = false;
                 }
+            }
+            out.push_back(tokens[tokens.size()-1]);
+        }
+
+
+        void LogTokenList(std::vector<Token> tokens) {
+            for (Token token : tokens) {
+                Logging::Log(Logging::Token(token.column, token.row, identenum[token.ident], token.value));
             }
         }
     }

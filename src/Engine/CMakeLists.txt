@@ -4,6 +4,6 @@ add_subdirectory(TreeGen)
 add_library(Engine Engine.cpp Engine.h)
 target_link_libraries(Engine
     PRIVATE
+    TreeGen
     Lexer
-    ArgsParse
-    TreeGen)
+    ArgsParse)

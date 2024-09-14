@@ -119,7 +119,7 @@ namespace Engine {
          * 
          * @param value The bool
          */
-        void Log(bool value);
+        //void Log(bool value);
 
 
         /**

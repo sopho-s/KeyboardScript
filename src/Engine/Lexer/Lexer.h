@@ -118,5 +118,13 @@ namespace Engine {
          * @param out The vector of combined (or not) tokens
          */
         void CombineTokens(std::vector<Token> tokens, std::vector<Token> &out);
+
+        
+        /**
+         * @brief Logs all tokens
+         * 
+         * @param tokens Token list
+         */
+        void LogTokenList(std::vector<Token> tokens);
     }
 }

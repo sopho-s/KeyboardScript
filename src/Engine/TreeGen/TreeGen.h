@@ -1,5 +1,8 @@
 #pragma once
 #include "../Lexer/Lexer.h"
+#include "../Logging/Errors.h"
+#include <vector>
+#include <map>
 
 namespace Engine {
     namespace TreeGen {
@@ -29,10 +32,26 @@ namespace Engine {
 
 
         /**
+         * @brief Sorts the tokens into prefix
+         * 
+         * @param tokens The tokens to be sorted
+         */
+        void SortTokens(std::vector<Lexer::Token> &tokens);
+
+
+        /**
          * @brief Sorts each section code into postfix
          * 
          * @param section The section to be sorted
          */
         void SortSection(Section &section);
+
+
+        /**
+         * @brief Logs the section for debugging purposes
+         * 
+         * @param section The section to be debugged
+         */
+        void LogSection(Section &section);
     }
 }
