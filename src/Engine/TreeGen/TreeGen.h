@@ -1,23 +1,13 @@
 #pragma once
 #include "../Lexer/Lexer.h"
 #include "../Logging/Errors.h"
+#include "../Objects/Objects.h"
 #include <vector>
 #include <map>
+#include <stack>
 
 namespace Engine {
     namespace TreeGen {
-        /**
-         * @brief Stores all the sections of code to be executed
-         * 
-         */
-        struct Section {
-            std::vector<Lexer::Token> tokens;
-            std::vector<Section> sections;
-            Section() {
-                tokens = std::vector<Lexer::Token>();
-                sections = std::vector<Section>();
-            }
-        };
 
 
         /**
@@ -28,7 +18,7 @@ namespace Engine {
          * @param until The end token
          * @param index The start index
          */
-        void FindSectionsUntil(std::vector<Lexer::Token> tokens, std::vector<Section> &out, Lexer::TokenType until, int &index);
+        void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index);
 
 
         /**
@@ -36,7 +26,7 @@ namespace Engine {
          * 
          * @param tokens The tokens to be sorted
          */
-        void SortTokens(std::vector<Lexer::Token> &tokens);
+        void SortTokens(std::vector<Objects::Token> &tokens);
 
 
         /**
@@ -44,7 +34,7 @@ namespace Engine {
          * 
          * @param section The section to be sorted
          */
-        void SortSection(Section &section);
+        void SortSection(Objects::Section &section);
 
 
         /**
@@ -52,6 +42,9 @@ namespace Engine {
          * 
          * @param section The section to be debugged
          */
-        void LogSection(Section &section);
+        void LogSection(Objects::Section &section);
+
+
+        std::map<std::string, Objects::Function> GetAllFunction(std::vector<Objects::Section> &sections);
     }
 }

@@ -2,8 +2,11 @@
 #include "Lexer/Lexer.h"
 #include "../ArgsParse.h"
 #include "TreeGen/TreeGen.h"
+#include "Objects/Objects.h"
+#include "Executor/Executor.h"
 #include <string>
 #include <vector>
+#include <map>
 
 namespace Engine {
     /**

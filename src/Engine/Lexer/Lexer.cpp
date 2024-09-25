@@ -2,13 +2,13 @@
 
 namespace Engine {
     namespace Lexer {
-        enum TokenType idents[24] = {semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, assign, point, comma, greater, lesser, mod, _return, func, _if, _and, _or, _not, _for, _while, _class};
-        char identschar[15] = {';', '(', ')', '}', '{', '+', '-', '*', '/', '=', '.', ',', '>', '<', '%'};
-        std::string identsstr[24] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ",", ">", "<", "%", "return", "func", "if", "and", "or", "not", "for", "while", "class"};
-        std::string identsname[24] = {"semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "assign", "point", "comma", "greater than", "lesser than", "mod" "return", "func", "if", "and", "or", "not", "for", "while", "class"};
-        enum TokenType combines[8][2] = {{add, assign}, {sub, assign}, {mul, assign}, {div, assign}, {mod, assign}, {assign, assign}, {greater, assign}, {lesser, assign}};
-        enum TokenType combinesto[8] = {addassign, subassign, mulassign, divassign, modassign, equal, greaterequal, lesserequal};
-        std::string identenum[40] = {"null", "illegal", "eof", "float", "int", "string", "greater", "lesser", "notequal", "equal", "ident", "semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "mod", "assign", "point", "comma", "return", "func", "if", "and", "or", "not", "for", "while", "class", "addassign", "subassign", "mulassign", "divassign", "modassign", "greaterequal", "lesserequal"};
+        enum Objects::TokenType idents[29] = {Objects::semi, Objects::openbracket, Objects::closebracket, Objects::cclosebracket, Objects::copenbracket, Objects::add, Objects::sub, Objects::mul, Objects::div, Objects::assign, Objects::point, Objects::comma, Objects::greater, Objects::lesser, Objects::mod, Objects::sopenbracket, Objects::sclosebracket, Objects::_return, Objects::func, Objects::_if, Objects::_and, Objects::_or, Objects::_not, Objects::_for, Objects::_while, Objects::_class, Objects::_else, Objects::_bool, Objects::_bool};
+        char identschar[17] = {';', '(', ')', '}', '{', '+', '-', '*', '/', '=', '.', ',', '>', '<', '%', '[', ']'};
+        std::string identsstr[29] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ",", ">", "<", "%", "[", "]", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "true", "false"};
+        std::string identsname[29] = {"semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "assign", "point", "comma", "greater than", "lesser than", "mod", "square open bracket", "square close bracket", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "bool", "bool"};
+        enum Objects::TokenType combines[8][2] = {{Objects::add, Objects::assign}, {Objects::sub, Objects::assign}, {Objects::mul, Objects::assign}, {Objects::div, Objects::assign}, {Objects::mod, Objects::assign}, {Objects::assign, Objects::assign}, {Objects::greater, Objects::assign}, {Objects::lesser, Objects::assign}};
+        enum Objects::TokenType combinesto[8] = {Objects::addassign, Objects::subassign, Objects::mulassign, Objects::divassign, Objects::modassign, Objects::equal, Objects::greaterequal, Objects::lesserequal};
+        std::string identenum[44] = {"null", "illegal", "eof", "float", "int", "string", "greater", "lesser", "notequal", "equal", "ident", "semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "mod", "assign", "point", "comma", "return", "func", "if", "and", "or", "not", "for", "while", "class", "addassign", "subassign", "mulassign", "divassign", "modassign", "greaterequal", "lesserequal", "squareopenbracket", "squareclosebracket", "else", "bool"};
         
         
         FileBuff::FileBuff(std::string filename) {
@@ -55,36 +55,36 @@ namespace Engine {
         }
 
 
-        void Analysis(std::string filename, std::vector<Token> &out) {
+        void Analysis(std::string filename, std::vector<Objects::Token> &out) {
             FileBuff file = FileBuff(filename);
             GetTokens(file, out);
             LogTokenList(out);
         }
 
 
-        void GetTokens(FileBuff &filebuff, std::vector<Token> &out) {
-            Token token;
-            std::vector<Token> tempout = std::vector<Token>();
+        void GetTokens(FileBuff &filebuff, std::vector<Objects::Token> &out) {
+            Objects::Token token;
+            std::vector<Objects::Token> tempout = std::vector<Objects::Token>();
             do {
                 token = GetNextToken(filebuff);
                 tempout.push_back(token);
-            } while (token.ident != eof);
+            } while (token.ident != Objects::eof);
             CombineTokens(tempout, out);
         }
 
 
-        Token GetNextToken(FileBuff &filebuff) {
+        Objects::Token GetNextToken(FileBuff &filebuff) {
             char nextchar;
             std::string stringtoken = "";
             nextchar = filebuff.ReadChar();
             if (nextchar == '\n') {
                 return GetNextToken(filebuff);
             } else if (nextchar == '\x00') {
-                return Token(0, 0, eof, "");
+                return Objects::Token(0, 0, Objects::eof, "");
             } else {
                 for (int i = 0; i < 15; i++) {
                     if (identschar[i] == nextchar) {
-                        return Token(filebuff.prevcolumn, filebuff.prevrow, idents[i], identsstr[i]);
+                        return Objects::Token(filebuff.prevcolumn, filebuff.prevrow, idents[i], identsstr[i]);
                     }
                 }
                 if (isdigit(nextchar)) {
@@ -101,10 +101,10 @@ namespace Engine {
                 }
             }
             Logging::Log(Logging::Error(filebuff.prevcolumn, filebuff.prevrow, 1, "illegal character"));
-            return Token(filebuff.prevcolumn, filebuff.prevrow, illegal, "ILLEGAL");
+            return Objects::Token(filebuff.prevcolumn, filebuff.prevrow, Objects::illegal, "ILLEGAL");
         }
 
-        Token LexNum(FileBuff &filebuff) {
+        Objects::Token LexNum(FileBuff &filebuff) {
             char nextchar;
             bool endnum = false;
             std::string num = "";
@@ -118,7 +118,7 @@ namespace Engine {
                 } else if (nextchar == '.') {
                     if (haspoint) {
                         Logging::Log(Logging::Error(column, row, 0, "number contains multiple points"));
-                        return Token(column, row, illegal, "");
+                        return Objects::Token(column, row, Objects::illegal, "");
                     }
                     num += nextchar;
                     haspoint = true;
@@ -128,14 +128,14 @@ namespace Engine {
                 }
             }
             if (haspoint) {
-                return Token(column, row, _float, num);
+                return Objects::Token(column, row, Objects::_float, num);
             } else {
-                return Token(column, row, _int, num);
+                return Objects::Token(column, row, Objects::_int, num);
             }
         }
 
 
-        Token LexStr(FileBuff &filebuff) {
+        Objects::Token LexStr(FileBuff &filebuff) {
             char nextchar = '\x00';
             std::string string = "";
             bool isescaped = false;
@@ -154,10 +154,10 @@ namespace Engine {
                         string += nextchar;
                     }
                 } else if (startstring == nextchar) {
-                    return Token(column, row, _string, string);
+                    return Objects::Token(column, row, Objects::_string, string);
                 } else if (nextchar == '\x00') {
                     Logging::Log(Logging::Error(column, row, 2, "string is not closed"));
-                    return Token(0, 0, illegal, "");
+                    return Objects::Token(0, 0, Objects::illegal, "");
                 } else {
                     string += nextchar;
                 }
@@ -165,7 +165,7 @@ namespace Engine {
         }
 
 
-        Token LexIdent(FileBuff &filebuff) {
+        Objects::Token LexIdent(FileBuff &filebuff) {
             char nextchar;
             bool endident = false;
             std::string name = "";
@@ -180,22 +180,22 @@ namespace Engine {
                     endident = true;
                 }
             }
-            for (int i = 15; i < 24; i++) {
+            for (int i = 15; i < 29; i++) {
                 if (identsstr[i] == name) {
-                    return Token(column, row, idents[i], name);
+                    return Objects::Token(column, row, idents[i], name);
                 }
             }
-            return Token(column, row, ident, name);
+            return Objects::Token(column, row, Objects::ident, name);
         }
 
 
-        void CombineTokens(std::vector<Token> tokens, std::vector<Token> &out) {
+        void CombineTokens(std::vector<Objects::Token> tokens, std::vector<Objects::Token> &out) {
             bool skip = false;
             for (int i = 1; i < tokens.size(); i++) {
                 if (!skip) {
                     for (int t = 0; t < 8; t++) {
                         if (tokens[i-1].ident == combines[t][0] && tokens[i].ident == combines[t][1]){
-                            Token temptok = tokens[i-1];
+                            Objects::Token temptok = tokens[i-1];
                             temptok.ident = combinesto[t];
                             temptok.value = tokens[i-1].value + tokens[i].value;
                             out.push_back(temptok);
@@ -214,10 +214,15 @@ namespace Engine {
         }
 
 
-        void LogTokenList(std::vector<Token> tokens) {
-            for (Token token : tokens) {
-                Logging::Log(Logging::Token(token.column, token.row, identenum[token.ident], token.value));
+        void LogTokenList(std::vector<Objects::Token> tokens) {
+            for (Objects::Token token : tokens) {
+                LogToken(token);
             }
+        }
+
+
+        void LogToken(Objects::Token token) {
+            Logging::Log(Logging::Token(token.column, token.row, identenum[token.ident], token.value));
         }
     }
 }

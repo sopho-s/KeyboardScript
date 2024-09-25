@@ -1,9 +1,9 @@
-func main() {
+func main () {
     i = 0;
     l = 32;
     b = 2.4;
-    if (l >= b) {
-        b = i - b;
-    }
     c = "Hello my friend\nNice to meet you";
+    if (l == 31) {
+        print(c);
+    }
 }

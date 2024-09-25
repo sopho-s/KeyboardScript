@@ -1,0 +1,163 @@
+#include "Builtins.h"
+
+namespace Engine {
+    namespace Builtins {
+        Objects::Value ToString(Objects::Value value) {
+            if (value.type == "string") {
+                return value;
+            } else if (value.type == "int") {
+                value._string = std::to_string(value._int);
+                value._int = 0;
+                value.type = "string";
+                return value;
+            } else if (value.type == "bool") {
+                value._string = (value._bool) ? "true" : "false";
+                value._bool = true;
+                value.type = "string";
+                return value;
+            } else if (value.type == "float") {
+                value._string = std::to_string(value._float);
+                value._float = 0;
+                value.type = "string";
+                return value;
+            }
+            return value;
+        }
+
+
+        Objects::Value ADD(Objects::Value value1, Objects::Value value2) {
+            Objects::Value returnvalue;
+            if (value1.type == "string" || value2.type == "string") {
+                returnvalue._string = Builtins::ToString(value2)._string + Builtins::ToString(value1)._string;
+                returnvalue.type = "string";
+                returnvalue.isvar = false;
+            } else if (value1.type == "int" && value2.type == "int") {
+                returnvalue._int = value1._int + value2._int;
+                returnvalue.type = "int";
+                returnvalue.isvar = false;
+            } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue._float = (float)value1._int + (float)value2._int + value1._float + value2._float;
+                returnvalue.type = "float";
+                returnvalue.isvar = false;
+            }
+            return returnvalue;
+        }
+
+
+        Objects::Value SUB(Objects::Value value1, Objects::Value value2) {
+            Objects::Value returnvalue;
+            if (value1.type == "int" && value2.type == "int") {
+                returnvalue._int = value2._int + value1._int;
+                returnvalue.type = "int";
+                returnvalue.isvar = false;
+            } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue._float = (float)value2._int - (float)value1._int + value2._float - value1._float;
+                returnvalue.type = "float";
+                returnvalue.isvar = false;
+            }
+            return returnvalue;
+        }
+
+
+        Objects::Value DIV(Objects::Value value1, Objects::Value value2) {
+            Objects::Value returnvalue;
+            if (value1.type == "int" && value2.type == "int") {
+                returnvalue._int = value2._int / value1._int;
+                returnvalue.type = "int";
+                returnvalue.isvar = false;
+            } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue._float = ((float)value2._int + value2._float) / ((float)value1._int + value1._float);
+                returnvalue.type = "float";
+                returnvalue.isvar = false;
+            }
+            return returnvalue;
+        }
+
+
+        Objects::Value MUL(Objects::Value value1, Objects::Value value2) {
+            Objects::Value returnvalue;
+            if (value1.type == "int" && value2.type == "int") {
+                returnvalue._int = value2._int * value1._int;
+                returnvalue.type = "int";
+                returnvalue.isvar = false;
+            } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue._float = ((float)value2._int + value2._float) * ((float)value1._int + value1._float);
+                returnvalue.type = "float";
+                returnvalue.isvar = false;
+            }
+            return returnvalue;
+        }
+
+
+        Objects::Value EQUAL(Objects::Value value1, Objects::Value value2) {
+            Objects::Value temp;
+            temp.type = "bool";
+            if (ToString(value1)._string == ToString(value2)._string) {
+                temp._bool = true;
+            } else {
+                temp._bool = false;
+            }
+            return temp;
+        }
+
+
+        Objects::Value GREATEREQUAL(Objects::Value value1, Objects::Value value2) {
+
+        }
+
+
+        Objects::Value LESSEREQUAL(Objects::Value value1, Objects::Value value2) {
+
+        }
+
+
+        Objects::Value LESSER(Objects::Value value1, Objects::Value value2) {
+
+        }
+
+
+        Objects::Value GREATER(Objects::Value value1, Objects::Value value2) {
+            
+        }
+
+
+        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value> &variables) {
+            Objects::Value assignment = value2;
+            assignment.isvar = true;
+            assignment.varname = value1.varname;
+            assignment._functions = value2._functions;
+            variables[assignment.varname] = assignment;
+            return Objects::Value();
+        }
+
+
+        Objects::Value Copy(Objects::Value pvalue) {
+            Objects::Value value;
+            value.varname = pvalue.varname;
+            value.type = pvalue.type;
+            value._int = pvalue._int;
+            value._float = pvalue._float;
+            value._bool = pvalue._bool;
+            value._string = pvalue._string;
+            value._list = pvalue._list;
+            value._attributes = pvalue._attributes;
+            value._functions = pvalue._functions;
+            value.isvar = true;
+            return value;
+        }
+
+        
+        Objects::Value print(Objects::Value printv) {
+            std::cout << ToString(printv)._string << std::endl;
+            return Objects::Value();
+        }
+
+
+        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
+            if (funcname == "print") {
+                return print(parameters["printv"]);
+            }
+            return Objects::Value();
+        }
+    }
+}
