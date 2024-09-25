@@ -7,19 +7,23 @@ namespace Engine {
             for (int i = 0; i < sections.size(); i++) {
                 if (sections[i].tokens.size() > 0) {
                     if (!skip) {
+                        Objects::Value out;
                         switch (sections[i].tokens[0].ident) {
                             case Objects::TokenType::_if:
-                                IF(sections, i, variables, functions);
+                                out = IF(sections, i, variables, functions);
                                 break;
                             case Objects::TokenType::_while:
-                                WHILE(sections, i, variables, functions);
+                                out = WHILE(sections, i, variables, functions);
                                 break;
                             case Objects::TokenType::_for:
-                                WHILE(sections, i, variables, functions);
+                                out = WHILE(sections, i, variables, functions);
                                 break;
                             default:
-                                EVALUATE(sections, i, variables, functions);
+                                out = EVALUATE(sections, i, variables, functions);
                                 break;
+                        }
+                        if (out.type == "Exception") {
+                            return out;
                         }
                     } else {
                         skip = false;
@@ -192,12 +196,12 @@ namespace Engine {
                 }
             }
             if (passed) {
-                EXECUTE(sections[pointer].sections, variables, functions);
+                return EXECUTE(sections[pointer].sections, variables, functions);
             } else {
                 if (sections.size() > pointer + 1) { 
                     if (sections[pointer + 1].tokens.size() > 0) {
                         if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
-                            IF(sections, ++pointer, variables, functions);
+                            return IF(sections, ++pointer, variables, functions);
                         }
                     }
                 }

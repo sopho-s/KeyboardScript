@@ -3,7 +3,9 @@ func main () {
     l = 32;
     b = 2.4;
     c = input();
-    if (l == 32) {
+    if (l == 31) {
         print(c);
+    } else if (l == 33) {
+        print("OIT");
     }
 }
