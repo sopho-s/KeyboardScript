@@ -6,7 +6,7 @@ namespace Engine {
             if (value.type == "string") {
                 return value;
             } else if (value.type == "int") {
-                value._string = std::to_string(value._int);
+                value._string = std::to_string((float)value._int);
                 value._int = 0;
                 value.type = "string";
                 return value;
@@ -92,36 +92,85 @@ namespace Engine {
         Objects::Value EQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
             temp.type = "bool";
-            if (ToString(value1)._string == ToString(value2)._string) {
-                temp._bool = true;
-            } else {
-                temp._bool = false;
-            }
+            temp._bool = ToString(value1)._string == ToString(value2)._string;
+            return temp;
+        }
+
+
+        Objects::Value NOTEQUAL(Objects::Value value1, Objects::Value value2) {
+            Objects::Value temp;
+            temp.type = "bool";
+            temp._bool = ToString(value1)._string != ToString(value2)._string;
             return temp;
         }
 
 
         Objects::Value GREATEREQUAL(Objects::Value value1, Objects::Value value2) {
-
+            Objects::Value temp;
+            temp.type = "bool";
+            if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int >= value2._int;
+            } else if (value1.type == "float" && value2.type == "int") {
+                temp._bool = value1._float >= value2._int;
+            } else if (value1.type == "float" && value2.type == "float") {
+                temp._bool = value1._float >= value2._float;
+            } else if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int >= value2._float;
+            }
+            return temp;
         }
 
 
         Objects::Value LESSEREQUAL(Objects::Value value1, Objects::Value value2) {
-
+            Objects::Value temp;
+            temp.type = "bool";
+            if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int <= value2._int;
+            } else if (value1.type == "float" && value2.type == "int") {
+                temp._bool = value1._float <= value2._int;
+            } else if (value1.type == "float" && value2.type == "float") {
+                temp._bool = value1._float <= value2._float;
+            } else if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int <= value2._float;
+            }
+            return temp;
         }
 
 
         Objects::Value LESSER(Objects::Value value1, Objects::Value value2) {
-
+            Objects::Value temp;
+            temp.type = "bool";
+            if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int < value2._int;
+            } else if (value1.type == "float" && value2.type == "int") {
+                temp._bool = value1._float < value2._int;
+            } else if (value1.type == "float" && value2.type == "float") {
+                temp._bool = value1._float < value2._float;
+            } else if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int < value2._float;
+            }
+            return temp;
         }
 
 
         Objects::Value GREATER(Objects::Value value1, Objects::Value value2) {
-            
+            Objects::Value temp;
+            temp.type = "bool";
+            if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int > value2._int;
+            } else if (value1.type == "float" && value2.type == "int") {
+                temp._bool = value1._float > value2._int;
+            } else if (value1.type == "float" && value2.type == "float") {
+                temp._bool = value1._float > value2._float;
+            } else if (value1.type == "int" && value2.type == "int") {
+                temp._bool = value1._int > value2._float;
+            }
+            return temp;
         }
 
 
         Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value> &variables) {
+            Logging::Log(value1.varname);
             Objects::Value assignment = value2;
             assignment.isvar = true;
             assignment.varname = value1.varname;
@@ -153,11 +202,79 @@ namespace Engine {
         }
 
 
+        Objects::Value input() {
+            std::string temp;
+            std::cin >> temp;
+            Objects::Value tempvalue = _string();
+            tempvalue._string = temp;
+            return tempvalue;
+        }
+
+
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
             if (funcname == "print") {
                 return print(parameters["printv"]);
+            } else if (funcname == "input") {
+                return input();
             }
             return Objects::Value();
+        }
+        
+
+        Objects::Value _string() {
+            Objects::Value returnvalue;
+            returnvalue.type = "string";
+            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
+            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
+            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            return returnvalue;
+        }
+
+
+        Objects::Value _int() {
+            Objects::Value returnvalue;
+            returnvalue.type = "int";
+            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
+            returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
+            returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
+            returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
+            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
+            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);
+            returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
+            returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
+            returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            return returnvalue;
+        }
+
+
+        Objects::Value _bool() {
+            Objects::Value returnvalue;
+            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
+            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            returnvalue.type = "bool";
+            return returnvalue;
+        }
+
+
+        Objects::Value _float() {
+            Objects::Value returnvalue;
+            returnvalue.type = "float";
+            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
+            returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
+            returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
+            returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
+            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
+            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);
+            returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
+            returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
+            returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            return returnvalue;
         }
     }
 }

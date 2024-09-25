@@ -2,8 +2,8 @@ func main () {
     i = 0;
     l = 32;
     b = 2.4;
-    c = "Hello my friend\nNice to meet you";
-    if (l == 31) {
+    c = input();
+    if (l == 32) {
         print(c);
     }
 }

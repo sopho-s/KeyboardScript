@@ -24,6 +24,9 @@ namespace Engine {
         Objects::Value EQUAL(Objects::Value value1, Objects::Value value2);
 
 
+        Objects::Value NOTEQUAL(Objects::Value value1, Objects::Value value2);
+
+
         Objects::Value GREATEREQUAL(Objects::Value value1, Objects::Value value2);
 
 
@@ -45,6 +48,21 @@ namespace Engine {
         Objects::Value print(Objects::Value value);
 
 
+        Objects::Value input();
+
+
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters);
+
+
+        Objects::Value _string();
+
+
+        Objects::Value _int();
+
+
+        Objects::Value _bool();
+
+
+        Objects::Value _float();
     }
 }

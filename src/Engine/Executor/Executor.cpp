@@ -103,6 +103,51 @@ namespace Engine {
                             }
                             break;
                         }
+                        case Objects::TokenType::greaterequal: {
+                            Objects::Value result = CallBasicOperation(values, "GREATEREQUAL", variables, functions);
+                            if (result.type != "exception") {
+                                values.push(ConvertValueToToken(result));
+                            } else {
+                                return result;
+                            }
+                            break;
+                        }
+                        case Objects::TokenType::lesserequal: {
+                            Objects::Value result = CallBasicOperation(values, "LESSEREQUAL", variables, functions);
+                            if (result.type != "exception") {
+                                values.push(ConvertValueToToken(result));
+                            } else {
+                                return result;
+                            }
+                            break;
+                        }
+                        case Objects::TokenType::lesser: {
+                            Objects::Value result = CallBasicOperation(values, "LESSER", variables, functions);
+                            if (result.type != "exception") {
+                                values.push(ConvertValueToToken(result));
+                            } else {
+                                return result;
+                            }
+                            break;
+                        }
+                        case Objects::TokenType::greater: {
+                            Objects::Value result = CallBasicOperation(values, "GREATER", variables, functions);
+                            if (result.type != "exception") {
+                                values.push(ConvertValueToToken(result));
+                            } else {
+                                return result;
+                            }
+                            break;
+                        }
+                        case Objects::TokenType::notequal: {
+                            Objects::Value result = CallBasicOperation(values, "NOTEQUAL", variables, functions);
+                            if (result.type != "exception") {
+                                values.push(ConvertValueToToken(result));
+                            } else {
+                                return result;
+                            }
+                            break;
+                        }
                         case Objects::TokenType::comma: {
                             if (functioncall) {
                                 paramleft--;
@@ -113,6 +158,7 @@ namespace Engine {
                     }
                 }
                 if (paramleft == 0 && functioncall) {
+                    functioncall = false;
                     std::map<std::string, Objects::Value> parameters;
                     for (int i = 0; i < functions[values.top().value].parametercount; i++) {
                         Objects::Value param = Builtins::Copy(ConvertTokenToValue(parameterstack.top(), variables));
@@ -120,11 +166,14 @@ namespace Engine {
                         parameters[param.varname] = param;
                         parameterstack.pop();
                     }
-                    
                     if (functions[values.top().value].builtin) {
-                        values.push(ConvertValueToToken(Builtins::BuiltinCall(values.top().value, parameters)));
+                        Objects::Value temp = Builtins::BuiltinCall(values.top().value, parameters);
+                        values.pop();
+                        values.push(ConvertValueToToken(temp));
                     } else {
-                        values.push(ConvertValueToToken(EXECUTE(functions[values.top().value].function, parameters, functions)));
+                        Objects::Value temp = EXECUTE(functions[values.top().value].function, parameters, functions);
+                        values.pop();
+                        values.push(ConvertValueToToken(temp));
                     }
                 }
                 lastresult = ConvertTokenToValue(values.top(), variables);
@@ -189,6 +238,7 @@ namespace Engine {
             if (temp._functions.find(operation) != temp._functions.end()) {
                 for (int i = 0; i < temp._functions[operation].parametercount; i++) {
                     params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
+                    Logging::Log(values.top().value);
                     values.pop();
                 }
                 if (temp._functions[operation].builtin) {
@@ -196,6 +246,8 @@ namespace Engine {
                         return Builtins::ASSIGN(params[0], params[1], variables);
                     } else if (operation == "EQUAL") {
                         return Builtins::EQUAL(params[0], params[1]);
+                    } else if (operation == "NOTEQUAL") {
+                        return Builtins::NOTEQUAL(params[0], params[1]);
                     } else if (operation == "SUB") {
                         return Builtins::SUB(params[0], params[1]);
                     } else if (operation == "ADD") {
@@ -204,6 +256,14 @@ namespace Engine {
                         return Builtins::DIV(params[0], params[1]);
                     } else if (operation == "MUL") {
                         return Builtins::MUL(params[0], params[1]);
+                    } else if (operation == "GREATEREQUAL") {
+                        return Builtins::GREATEREQUAL(params[0], params[1]);
+                    } else if (operation == "LESSEREQUAL") {
+                        return Builtins::LESSEREQUAL(params[0], params[1]);
+                    } else if (operation == "GREATER") {
+                        return Builtins::GREATER(params[0], params[1]);
+                    } else if (operation == "LESSER") {
+                        return Builtins::LESSER(params[0], params[1]);
                     }
                 } else {
                     std::map<std::string, Objects::Value> parameters;
@@ -241,41 +301,24 @@ namespace Engine {
             Objects::Value returnvalue;
             switch (token.ident) {
                 case Objects::TokenType::_int:
+                    returnvalue = Builtins::_int();
                     returnvalue._int = std::stoi(token.value);
-                    returnvalue.type = "int";
-                    returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-                    returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
-                    returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
-                    returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
-                    returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-                    returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
                     break;
                 case Objects::TokenType::_float:
+                    returnvalue = Builtins::_float();
                     returnvalue._float = std::stof(token.value);
-                    returnvalue.type = "float";
-                    returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-                    returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
-                    returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
-                    returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
-                    returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-                    returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
                     break;
                 case Objects::TokenType::_bool:
+                    returnvalue = Builtins::_bool();
                     if (token.value == "true") {
                         returnvalue._bool = true;
                     } else {
                         returnvalue._bool = false;
                     }
-                    returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-                    returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
-                    returnvalue.type = "bool";
                     break;
                 case Objects::TokenType::_string:
+                    returnvalue = Builtins::_string();
                     returnvalue._string = token.value;
-                    returnvalue.type = "string";
-                    returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-                    returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-                    returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
                     break;
                 default:
                     if (variables.find(token.value) != variables.end()) {
