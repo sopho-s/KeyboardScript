@@ -233,6 +233,7 @@ namespace Engine {
 
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
             if (funcname == "print") {
+                Logging::Log(parameters["printv"]._string);
                 return print(parameters["printv"]);
             } else if (funcname == "input") {
                 return input();

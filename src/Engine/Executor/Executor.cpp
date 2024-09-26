@@ -327,6 +327,8 @@ namespace Engine {
                         returnvalue.varname = token.value;
                     }
             }
+            Logging::Log(returnvalue.varname + " is:");
+            Logging::Log(Builtins::ToString(returnvalue)._string);
             return returnvalue;
         }
 
