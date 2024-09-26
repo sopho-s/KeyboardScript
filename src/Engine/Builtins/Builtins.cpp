@@ -233,7 +233,6 @@ namespace Engine {
 
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
             if (funcname == "print") {
-                Logging::Log(parameters["printv"]._string);
                 return print(parameters["printv"]);
             } else if (funcname == "input") {
                 return input();
@@ -299,6 +298,14 @@ namespace Engine {
             returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
             returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
             returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            return returnvalue;
+        }
+
+
+        Objects::Value _none() {
+            Objects::Value returnvalue;
+            returnvalue.type = "none";
+            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
             return returnvalue;
         }
 

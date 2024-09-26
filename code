@@ -1,13 +1,10 @@
+func test(temp, value) {
+    print(value);
+    print("ANYTHING");
+    print(temp);
+}
+
+
 func main () {
-    i = 0;
-    l = 32;
-    b = 2.4;
-    c = input();
-    print(c);
-    if (l == 31) {
-        print(c);
-    } else if (l == 32) {
-        print("TEST");
-        raise("There was an error");
-    }
+    test(input(), input());
 }

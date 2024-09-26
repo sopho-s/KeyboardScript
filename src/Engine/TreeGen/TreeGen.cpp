@@ -24,7 +24,7 @@ namespace Engine {
                                                                 {Objects::mod, 2},
                                                                 {Objects::comma, 3}};
         std::map<Objects::TokenType, int> precedence(precvec.begin(), precvec.end());
-        std::vector<Objects::TokenType> operators = {Objects::greater, Objects::lesser, Objects::notequal, Objects::equal, Objects::greaterequal, Objects::lesserequal, Objects::assign, Objects::addassign, Objects::subassign, Objects::divassign, Objects::mulassign, Objects::modassign, Objects::_and, Objects::_or, Objects::_not, Objects::div, Objects::mul, Objects::mod, Objects::sub, Objects::add};
+        std::vector<Objects::TokenType> operators = {Objects::greater, Objects::lesser, Objects::notequal, Objects::equal, Objects::greaterequal, Objects::lesserequal, Objects::assign, Objects::addassign, Objects::subassign, Objects::divassign, Objects::mulassign, Objects::modassign, Objects::_and, Objects::_or, Objects::_not, Objects::div, Objects::mul, Objects::mod, Objects::sub, Objects::add, Objects::openbracket, Objects::closebracket};
         std::vector<Objects::TokenType> values = {Objects::_int, Objects::_float, Objects::_string, Objects::ident, Objects::_class, Objects::_else, Objects::_if, Objects::func, Objects::_while};
         void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index) {
             Objects::Token pausetoken = tokens[index]; 
@@ -92,12 +92,14 @@ namespace Engine {
                             isspec = false;
                             if (storedoperators.size() > 0) {
                                 if (token.ident == Objects::TokenType::openbracket) {
+                                    temptokens.push_back(token);
                                     storedoperators.push(token);
                                 } else if (token.ident == Objects::TokenType::closebracket) {
                                     while (storedoperators.size() > 0 && storedoperators.top().ident != Objects::TokenType::openbracket) {
                                         temptokens.push_back(storedoperators.top());
                                         storedoperators.pop();
                                     }
+                                    temptokens.push_back(token);
                                     storedoperators.pop();
                                 } else if (precvec[storedoperators.top().ident] < precvec[token.ident]) {
                                     while (storedoperators.size() > 0 && storedoperators.top().ident != Objects::TokenType::openbracket) {
@@ -109,6 +111,9 @@ namespace Engine {
                                     storedoperators.push(token);
                                 }
                             } else {
+                                if (token.ident == Objects::TokenType::openbracket) {
+                                    temptokens.push_back(token);
+                                }
                                 storedoperators.push(token);
                             }
                         }
@@ -151,7 +156,7 @@ namespace Engine {
                         newfunc.builtin = false;
                         newfunc._namespace = "main";
                         if (section.tokens.size() > 2) {
-                            for (int i = 2; i < section.tokens.size(); i++) {
+                            for (int i = 3; i < section.tokens.size() - 1; i++) {
                                 if (section.tokens[i].ident != Objects::comma) {
                                     newfunc.parametercount++;
                                     newfunc.parameternames.push_back(section.tokens[i].value);
@@ -161,7 +166,6 @@ namespace Engine {
                             }
                         }
                         newfunc.function = section.sections;
-                        Logging::Log(section.tokens[1].value);
                         returnvals[section.tokens[1].value] = newfunc;
                     }
                 }

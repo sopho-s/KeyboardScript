@@ -72,6 +72,9 @@ namespace Engine {
         Objects::Value _float();
 
 
+        Objects::Value _none();
+
+
         Objects::Value RaiseException(std::string pwhat, int pcode);
     }
 }

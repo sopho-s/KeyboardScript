@@ -22,7 +22,7 @@ namespace Engine {
                                 out = EVALUATE(sections, i, variables, functions);
                                 break;
                         }
-                        if (out.type == "Exception") {
+                        if (out.isexception) {
                             return out;
                         }
                     } else {
@@ -37,131 +37,139 @@ namespace Engine {
         Objects::Value EVALUATE(std::vector<Objects::Section> &sections, int pointer, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
             std::stack<Objects::Token> values = std::stack<Objects::Token>();
             std::stack<Objects::Token> parameterstack = std::stack<Objects::Token>();
+            std::stack<int> braclevels = std::stack<int>();
+            std::stack<int> paramcounts = std::stack<int>();
             Objects::Value lastresult;
-            bool functioncall = false;
-            int paramleft = 0;
+            int braclevel = 0;
             for (Objects::Token value : sections[pointer].tokens) {
-                if (paramleft == 1 && functioncall) {
-                    paramleft--;
-                    parameterstack.push(value);
-                } else if (!value.isoperator) {
-                    if (functions.find(value.value) != functions.end()) {
-                        functioncall = true;
-                        paramleft = functions[value.value].parametercount;
-                    }
-                    values.push(value);
-                } else {
+                if (value.isoperator) {
                     switch (value.ident) {
                         case Objects::TokenType::assign: {
                             Objects::Value result = CallBasicOperation(values, "ASSIGN", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::add: {
                             Objects::Value result = CallBasicOperation(values, "ADD", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::sub: {
                             Objects::Value result = CallBasicOperation(values, "SUB", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::mul: {
                             Objects::Value result = CallBasicOperation(values, "MUL", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::div: {
                             Objects::Value result = CallBasicOperation(values, "DIV", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::equal: {
                             Objects::Value result = CallBasicOperation(values, "EQUAL", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::greaterequal: {
                             Objects::Value result = CallBasicOperation(values, "GREATEREQUAL", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::lesserequal: {
                             Objects::Value result = CallBasicOperation(values, "LESSEREQUAL", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::lesser: {
                             Objects::Value result = CallBasicOperation(values, "LESSER", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::greater: {
                             Objects::Value result = CallBasicOperation(values, "GREATER", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
                         case Objects::TokenType::notequal: {
                             Objects::Value result = CallBasicOperation(values, "NOTEQUAL", variables, functions);
                             if (result.isexception) {
-                                values.push(ConvertValueToToken(result));
-                            } else {
                                 return result;
+                            } else {
+                                values.push(ConvertValueToToken(result));
                             }
                             break;
                         }
-                        case Objects::TokenType::comma: {
-                            if (functioncall) {
-                                paramleft--;
-                                parameterstack.push(values.top());
-                                values.pop();
+                        case Objects::TokenType::openbracket: {
+                            braclevel++;
+                            break;
+                        }
+                        case Objects::TokenType::closebracket: {
+                            braclevel--;
+                            if (!braclevels.empty() && braclevel == braclevels.top()) {
+                                int paramleft = paramcounts.top();
+                                while (paramleft > 0) {
+                                    paramleft--;
+                                    parameterstack.push(values.top());
+                                    values.pop();
+                                }
+                                paramcounts.pop();
                             }
                         }
                     }
                 }
-                if (paramleft == 0 && functioncall) {
-                    functioncall = false;
+
+                if (!value.isoperator) {
+                    if (functions.find(value.value) != functions.end()) {
+                        paramcounts.push(functions[value.value].parametercount);
+                        braclevels.push(braclevel);
+                    }
+                    values.push(value);
+                } else if (!braclevels.empty() && braclevel == braclevels.top()) {
+                    braclevels.pop();
                     std::map<std::string, Objects::Value> parameters;
                     for (int i = 0; i < functions[values.top().value].parametercount; i++) {
                         Objects::Value param = Builtins::Copy(ConvertTokenToValue(parameterstack.top(), variables));
@@ -171,11 +179,14 @@ namespace Engine {
                     }
                     if (functions[values.top().value].builtin) {
                         Objects::Value temp = Builtins::BuiltinCall(values.top().value, parameters);
+                        if (temp.isexception) {
+                            return temp;
+                        }
                         values.pop();
                         values.push(ConvertValueToToken(temp));
                     } else {
                         Objects::Value temp = EXECUTE(functions[values.top().value].function, parameters, functions);
-                        if (temp.type != "exception") {
+                        if (temp.isexception) {
                             return temp;
                         }
                         values.pop();
@@ -323,12 +334,13 @@ namespace Engine {
                 default:
                     if (variables.find(token.value) != variables.end()) {
                         returnvalue = variables[token.value];
+                        returnvalue.isvar = true;
                     } else {
+                        returnvalue = Builtins::_none();
                         returnvalue.varname = token.value;
+                        returnvalue.isvar = true;
                     }
             }
-            Logging::Log(returnvalue.varname + " is:");
-            Logging::Log(Builtins::ToString(returnvalue)._string);
             return returnvalue;
         }
 
@@ -354,6 +366,10 @@ namespace Engine {
             } else if (value.type == "float") {
                 returntoken.ident = Objects::TokenType::_float;
                 returntoken.value = std::to_string(value._float);
+                returntoken.isoperator = false;
+            } else {
+                returntoken.ident = Objects::TokenType::ident;
+                returntoken.value = value.varname;
                 returntoken.isoperator = false;
             }
             return returntoken;
