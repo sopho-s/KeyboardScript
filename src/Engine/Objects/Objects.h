@@ -6,7 +6,7 @@
 
 namespace Engine {
     namespace Objects {
-        enum TokenType {null, illegal, eof, _float, _int, _string, greater, lesser, notequal, equal, ident, semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, mod, assign, point, comma, _return, func, _if, _and, _or, _not, _for, _while, _class, addassign, subassign, mulassign, divassign, modassign, greaterequal, lesserequal, sopenbracket, sclosebracket, _else, _bool, _try};
+        enum TokenType {null, illegal, eof, _float, _int, _string, greater, lesser, notequal, equal, ident, semi, openbracket, closebracket, cclosebracket, copenbracket, add, sub, mul, div, mod, assign, point, comma, _return, func, _if, _and, _or, _not, _for, _while, _class, addassign, subassign, mulassign, divassign, modassign, greaterequal, lesserequal, sopenbracket, sclosebracket, _else, _bool, ___try};
 
         /**
          * @brief Stores a token read from the lexer

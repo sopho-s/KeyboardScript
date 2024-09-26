@@ -53,7 +53,7 @@ namespace Engine {
                         out.push_back(section);
                         LogSection(section);
                         section = Objects::Section();
-                    } else if (tokens[index].ident == Objects::TokenType::_try) {
+                    } else if (tokens[index].ident == Objects::TokenType::___try) {
                         section.tokens.push_back(tokens[index]);
                         index += 2;
                         FindSectionsUntil(tokens, section.sections, Objects::cclosebracket, index);

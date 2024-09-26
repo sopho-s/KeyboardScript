@@ -47,11 +47,11 @@ namespace Engine {
         Objects::Value SUB(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "int" && value2.type == "int") {
-                returnvalue._int = value2._int + value1._int;
+                returnvalue._int = value1._int - value2._int;
                 returnvalue.type = "int";
                 returnvalue.isvar = false;
             } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
-                returnvalue._float = (float)value2._int - (float)value1._int + value2._float - value1._float;
+                returnvalue._float = - (float)value2._int + (float)value1._int - value2._float + value1._float;
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
             }
@@ -61,12 +61,8 @@ namespace Engine {
 
         Objects::Value DIV(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
-            if (value1.type == "int" && value2.type == "int") {
-                returnvalue._int = value2._int / value1._int;
-                returnvalue.type = "int";
-                returnvalue.isvar = false;
-            } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
-                returnvalue._float = ((float)value2._int + value2._float) / ((float)value1._int + value1._float);
+            if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue._float = ((float)value1._int + value1._float) / ((float)value2._int + value2._float);
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
             }

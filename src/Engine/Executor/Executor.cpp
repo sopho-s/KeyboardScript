@@ -18,7 +18,7 @@ namespace Engine {
                             case Objects::TokenType::_for:
                                 out = WHILE(sections, i, variables, functions);
                                 break;
-                            case Objects::TokenType::_try:
+                            case Objects::TokenType::___try:
                                 out = TRY(sections, i, variables, functions);
                                 break;
                             default:
