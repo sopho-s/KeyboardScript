@@ -25,9 +25,6 @@ namespace Engine {
         Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions);
 
 
-        Objects::Value RaiseException(std::string what, int code);
-
-
         Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, Objects::Value> &variables);
 
 

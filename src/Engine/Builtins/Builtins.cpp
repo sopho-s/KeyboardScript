@@ -164,13 +164,17 @@ namespace Engine {
                 temp._bool = value1._float > value2._float;
             } else if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int > value2._float;
+            } else {
+                return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
             }
             return temp;
         }
 
 
         Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value> &variables) {
-            Logging::Log(value1.varname);
+            if (!value1.isvar) {
+                return RaiseException("you may not assign a value to an immediate", 1);
+            }
             Objects::Value assignment = value2;
             assignment.isvar = true;
             assignment.varname = value1.varname;
@@ -211,11 +215,31 @@ namespace Engine {
         }
 
 
+        Objects::Value raise(Objects::Value value) {
+            if (value.type == "exception") {
+                value.isexception = true;
+                return value;
+            }
+            return RaiseException(ToString(value)._string, -1);
+        }
+
+
+        Objects::Value _typeof(Objects::Value value) {
+            Objects::Value returnvalue = _string();
+            returnvalue._string = value.type;
+            return returnvalue;
+        }
+
+
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
             if (funcname == "print") {
                 return print(parameters["printv"]);
             } else if (funcname == "input") {
                 return input();
+            } else if (funcname == "typeof") {
+                return _typeof(parameters["var"]);
+            } else if (funcname == "raise") {
+                return raise(parameters["what"]);
             }
             return Objects::Value();
         }
@@ -274,6 +298,24 @@ namespace Engine {
             returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
             returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
             returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            return returnvalue;
+        }
+
+
+        Objects::Value RaiseException(std::string pwhat, int pcode) {
+            Objects::Value returnvalue;
+            returnvalue.type = "exception";
+            Objects::Value what;
+            what.type = "string";
+            what.varname = "what";
+            what._string = pwhat;
+            returnvalue._attributes["what"] = what;
+            Objects::Value code;
+            code.type = "int";
+            code.varname = "code";
+            code._int = pcode;
+            returnvalue._attributes["code"] = code;
+            returnvalue.isexception = true;
             return returnvalue;
         }
     }

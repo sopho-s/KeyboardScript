@@ -51,6 +51,12 @@ namespace Engine {
         Objects::Value input();
 
 
+        Objects::Value raise(Objects::Value value);
+
+
+        Objects::Value _typeof(Objects::Value value);
+
+
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters);
 
 
@@ -64,5 +70,8 @@ namespace Engine {
 
 
         Objects::Value _float();
+
+
+        Objects::Value RaiseException(std::string pwhat, int pcode);
     }
 }

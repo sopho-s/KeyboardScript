@@ -41,7 +41,6 @@ namespace Engine {
             bool functioncall = false;
             int paramleft = 0;
             for (Objects::Token value : sections[pointer].tokens) {
-                Lexer::LogToken(value);
                 if (paramleft == 1 && functioncall) {
                     paramleft--;
                     parameterstack.push(value);
@@ -55,7 +54,7 @@ namespace Engine {
                     switch (value.ident) {
                         case Objects::TokenType::assign: {
                             Objects::Value result = CallBasicOperation(values, "ASSIGN", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -64,7 +63,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::add: {
                             Objects::Value result = CallBasicOperation(values, "ADD", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -73,7 +72,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::sub: {
                             Objects::Value result = CallBasicOperation(values, "SUB", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -82,7 +81,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::mul: {
                             Objects::Value result = CallBasicOperation(values, "MUL", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -91,7 +90,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::div: {
                             Objects::Value result = CallBasicOperation(values, "DIV", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -100,7 +99,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::equal: {
                             Objects::Value result = CallBasicOperation(values, "EQUAL", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -109,7 +108,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::greaterequal: {
                             Objects::Value result = CallBasicOperation(values, "GREATEREQUAL", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -118,7 +117,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::lesserequal: {
                             Objects::Value result = CallBasicOperation(values, "LESSEREQUAL", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -127,7 +126,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::lesser: {
                             Objects::Value result = CallBasicOperation(values, "LESSER", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -136,7 +135,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::greater: {
                             Objects::Value result = CallBasicOperation(values, "GREATER", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -145,7 +144,7 @@ namespace Engine {
                         }
                         case Objects::TokenType::notequal: {
                             Objects::Value result = CallBasicOperation(values, "NOTEQUAL", variables, functions);
-                            if (result.type != "exception") {
+                            if (result.isexception) {
                                 values.push(ConvertValueToToken(result));
                             } else {
                                 return result;
@@ -176,6 +175,9 @@ namespace Engine {
                         values.push(ConvertValueToToken(temp));
                     } else {
                         Objects::Value temp = EXECUTE(functions[values.top().value].function, parameters, functions);
+                        if (temp.type != "exception") {
+                            return temp;
+                        }
                         values.pop();
                         values.push(ConvertValueToToken(temp));
                     }
@@ -190,6 +192,9 @@ namespace Engine {
             bool passed = true;
             for (int i = 0; i < sections[pointer].conditions.size(); i++) {
                 Objects::Value pass = EVALUATE(sections[pointer].conditions, i, variables, functions);
+                if (pass.isexception) {
+                    return pass;
+                }
                 if (!pass._bool) {
                     passed = false;
                     break;
@@ -215,18 +220,27 @@ namespace Engine {
             while (passed) {
                 for (int i = 0; i < sections[pointer].conditions.size(); i++) {
                     Objects::Value pass = EVALUATE(sections[pointer].conditions, i, variables, functions);
+                    if (pass.isexception) {
+                        return pass;
+                    }
                     if (!pass._bool) {
                         passed = false;
                         break;
                     }
                 }
                 if (passed) {
-                    EXECUTE(sections[pointer].sections, variables, functions);
+                    Objects::Value result = EXECUTE(sections[pointer].sections, variables, functions);
+                    if (result.isexception) {
+                        return result;
+                    }
                 } else {
                     if (sections.size() > pointer + 1) { 
                         if (sections[pointer + 1].tokens.size() > 0) {
                             if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
-                                WHILE(sections, ++pointer, variables, functions);
+                                Objects::Value result = WHILE(sections, ++pointer, variables, functions);
+                                if (result.type == "exception") {
+                                    return result;
+                                }
                             }
                         }
                     }
@@ -242,7 +256,6 @@ namespace Engine {
             if (temp._functions.find(operation) != temp._functions.end()) {
                 for (int i = 0; i < temp._functions[operation].parametercount; i++) {
                     params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
-                    Logging::Log(values.top().value);
                     values.pop();
                 }
                 if (temp._functions[operation].builtin) {
@@ -279,25 +292,8 @@ namespace Engine {
                     return EXECUTE(temp._functions[operation].function, parameters, functions);
                 }
             } else {
-                return RaiseException("type \"" + params[0].type + "\" and \"" + params[1].type + "\" have no \"" + operation + "\" function", 0);
+                return Builtins::RaiseException("type \"" + params[0].type + "\" has no \"" + operation + "\" function", 0);
             }
-        }
-
-
-        Objects::Value RaiseException(std::string pwhat, int pcode) {
-            Objects::Value returnvalue;
-            returnvalue.type = "exception";
-            Objects::Value what;
-            what.type = "string";
-            what.varname = "what";
-            what._string = pwhat;
-            returnvalue._attributes["what"] = what;
-            Objects::Value code;
-            code.type = "int";
-            code.varname = "code";
-            code._int = pcode;
-            returnvalue._attributes["code"] = code;
-            return returnvalue;
         }
 
 

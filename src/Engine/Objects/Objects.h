@@ -81,6 +81,7 @@ namespace Engine {
 
         struct Value {
             bool isvar = false;
+            bool isexception = false;
             std::string varname = "";
             std::string type = "null";
             int _int = 0;

@@ -23,10 +23,16 @@ namespace Engine {
         Logging::Log("Abstract syntax tree generation was performed successfully");
         std::map<std::string, Objects::Function> functions = TreeGen::GetAllFunction(sections);
         functions["print"] = Objects::Function("print", "", 1, {"printv"});
+        functions["raise"] = Objects::Function("raise", "", 1, {"what"});
+        functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});
         functions["input"] = Objects::Function("input", "", 0);
         Logging::Log("Function finding was performed successfully");
         std::map<std::string, Objects::Value> values;
-        Executor::EXECUTE(functions["main"].function, values, functions);
-        Logging::Log("Execution was performed successfully");
+        Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions);
+        if (!out.isexception) {
+            Logging::Log("Execution was performed successfully");
+        } else {
+            Logging::Log(Logging::Error(0, 0, out._attributes["code"]._int, out._attributes["what"]._string));
+        }
     }
 }
