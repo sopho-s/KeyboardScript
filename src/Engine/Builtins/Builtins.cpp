@@ -28,7 +28,7 @@ namespace Engine {
         Objects::Value ADD(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "string" || value2.type == "string") {
-                returnvalue._string = Builtins::ToString(value2)._string + Builtins::ToString(value1)._string;
+                returnvalue._string = Builtins::ToString(value1)._string + Builtins::ToString(value2)._string;
                 returnvalue.type = "string";
                 returnvalue.isvar = false;
             } else if (value1.type == "int" && value2.type == "int") {
@@ -236,6 +236,8 @@ namespace Engine {
                 return _typeof(parameters["var"]);
             } else if (funcname == "raise") {
                 return raise(parameters["what"]);
+            } else if (funcname == "toString") {
+                return ToString(parameters["var"]);
             }
             return Objects::Value();
         }

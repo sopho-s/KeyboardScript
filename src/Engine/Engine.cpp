@@ -26,6 +26,7 @@ namespace Engine {
         functions["raise"] = Objects::Function("raise", "", 1, {"what"});
         functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});
         functions["input"] = Objects::Function("input", "", 0);
+        functions["toString"] = Objects::Function("toString", "", 1, {"var"});
         Logging::Log("Function finding was performed successfully");
         std::map<std::string, Objects::Value> values;
         Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions);
