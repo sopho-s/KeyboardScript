@@ -1,10 +1,9 @@
-func test(temp, value) {
-    print(value);
-    print("ANYTHING");
-    print(temp);
-}
-
-
 func main () {
-    test(input(), input());
+    try {
+        raise("error");
+        print("TEST2");
+    } else {
+        print("TEST3");
+    }
+    print("TEST1");
 }

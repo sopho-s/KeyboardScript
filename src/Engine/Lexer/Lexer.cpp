@@ -2,13 +2,13 @@
 
 namespace Engine {
     namespace Lexer {
-        enum Objects::TokenType idents[29] = {Objects::semi, Objects::openbracket, Objects::closebracket, Objects::cclosebracket, Objects::copenbracket, Objects::add, Objects::sub, Objects::mul, Objects::div, Objects::assign, Objects::point, Objects::comma, Objects::greater, Objects::lesser, Objects::mod, Objects::sopenbracket, Objects::sclosebracket, Objects::_return, Objects::func, Objects::_if, Objects::_and, Objects::_or, Objects::_not, Objects::_for, Objects::_while, Objects::_class, Objects::_else, Objects::_bool, Objects::_bool};
+        enum Objects::TokenType idents[30] = {Objects::semi, Objects::openbracket, Objects::closebracket, Objects::cclosebracket, Objects::copenbracket, Objects::add, Objects::sub, Objects::mul, Objects::div, Objects::assign, Objects::point, Objects::comma, Objects::greater, Objects::lesser, Objects::mod, Objects::sopenbracket, Objects::sclosebracket, Objects::_return, Objects::func, Objects::_if, Objects::_and, Objects::_or, Objects::_not, Objects::_for, Objects::_while, Objects::_class, Objects::_else, Objects::_try, Objects::_bool, Objects::_bool};
         char identschar[17] = {';', '(', ')', '}', '{', '+', '-', '*', '/', '=', '.', ',', '>', '<', '%', '[', ']'};
-        std::string identsstr[29] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ",", ">", "<", "%", "[", "]", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "true", "false"};
-        std::string identsname[29] = {"semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "assign", "point", "comma", "greater than", "lesser than", "mod", "square open bracket", "square close bracket", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "bool", "bool"};
+        std::string identsstr[30] = {";", "(", ")", "}", "{", "+", "-", "*", "/", "=", ".", ",", ">", "<", "%", "[", "]", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "try", "true", "false"};
+        std::string identsname[30] = {"semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "assign", "point", "comma", "greater than", "lesser than", "mod", "square open bracket", "square close bracket", "return", "func", "if", "and", "or", "not", "for", "while", "class", "else", "try", "bool", "bool"};
         enum Objects::TokenType combines[8][2] = {{Objects::add, Objects::assign}, {Objects::sub, Objects::assign}, {Objects::mul, Objects::assign}, {Objects::div, Objects::assign}, {Objects::mod, Objects::assign}, {Objects::assign, Objects::assign}, {Objects::greater, Objects::assign}, {Objects::lesser, Objects::assign}};
         enum Objects::TokenType combinesto[8] = {Objects::addassign, Objects::subassign, Objects::mulassign, Objects::divassign, Objects::modassign, Objects::equal, Objects::greaterequal, Objects::lesserequal};
-        std::string identenum[44] = {"null", "illegal", "eof", "float", "int", "string", "greater", "lesser", "notequal", "equal", "ident", "semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "mod", "assign", "point", "comma", "return", "func", "if", "and", "or", "not", "for", "while", "class", "addassign", "subassign", "mulassign", "divassign", "modassign", "greaterequal", "lesserequal", "squareopenbracket", "squareclosebracket", "else", "bool"};
+        std::string identenum[45] = {"null", "illegal", "eof", "float", "int", "string", "greater", "lesser", "notequal", "equal", "ident", "semi", "openbracket", "closebracket", "cclosebracket", "copenbracket", "add", "sub", "mul", "div", "mod", "assign", "point", "comma", "return", "func", "if", "and", "or", "not", "for", "while", "class", "addassign", "subassign", "mulassign", "divassign", "modassign", "greaterequal", "lesserequal", "squareopenbracket", "squareclosebracket", "else", "bool", "try"};
         
         
         FileBuff::FileBuff(std::string filename) {
@@ -180,7 +180,7 @@ namespace Engine {
                     endident = true;
                 }
             }
-            for (int i = 15; i < 29; i++) {
+            for (int i = 15; i < 30; i++) {
                 if (identsstr[i] == name) {
                     return Objects::Token(column, row, idents[i], name);
                 }
