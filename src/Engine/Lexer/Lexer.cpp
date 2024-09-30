@@ -173,7 +173,7 @@ namespace Engine {
             int row = filebuff.row;
             while (!endident) {
                 nextchar = filebuff.ReadChar();
-                if (isalnum(nextchar) || nextchar == '_') {
+                if (isalnum(nextchar) || nextchar == '_' || nextchar == '.') {
                     name += nextchar;
                 } else {
                     filebuff.Backup();

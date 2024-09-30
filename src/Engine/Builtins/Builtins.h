@@ -39,7 +39,7 @@ namespace Engine {
         Objects::Value GREATER(Objects::Value value1, Objects::Value value2);
 
 
-        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value> &variables);
+        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value*> &variables);
 
 
         Objects::Value Copy(Objects::Value value);
@@ -57,7 +57,7 @@ namespace Engine {
         Objects::Value _typeof(Objects::Value value);
 
 
-        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters);
+        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value*> parameters);
 
 
         Objects::Value _string();

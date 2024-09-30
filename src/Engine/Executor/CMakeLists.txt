@@ -5,4 +5,5 @@ target_link_libraries(Executor
     Logging
     TreeGen
     Objects
-    Builtins)
+    Builtins
+    _String)

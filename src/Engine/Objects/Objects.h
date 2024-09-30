@@ -57,6 +57,7 @@ namespace Engine {
             int parametercount = 0;
             std::vector<std::string> parameternames;
             bool builtin = false;
+            bool exist = false;
 
             Function() {;}
             
@@ -89,7 +90,7 @@ namespace Engine {
             bool _bool = true;
             std::string _string = "";
             std::vector<Value> _list;
-            std::map<std::string, Value> _attributes;
+            std::map<std::string, Value*> _attributes;
             std::map<std::string, Function> _functions;
         };
     }

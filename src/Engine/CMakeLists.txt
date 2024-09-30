@@ -1,4 +1,5 @@
 add_subdirectory(Logging)
+add_subdirectory(Mist)
 add_subdirectory(Objects)
 add_subdirectory(Lexer)
 add_subdirectory(TreeGen)
@@ -12,4 +13,5 @@ target_link_libraries(Engine
     ArgsParse
     Objects
     Builtins
-    Executor)
+    Executor
+    _String)

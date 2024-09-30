@@ -2,7 +2,7 @@
 
 namespace Engine {
     namespace Executor {
-        Objects::Value EXECUTE(std::vector<Objects::Section> &sections, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value EXECUTE(std::vector<Objects::Section> &sections, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             bool skip = false;
             for (int i = 0; i < sections.size(); i++) {
                 if (sections[i].tokens.size() > 0) {
@@ -37,7 +37,7 @@ namespace Engine {
         }
 
         
-        Objects::Value EVALUATE(std::vector<Objects::Section> &sections, int pointer, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value EVALUATE(std::vector<Objects::Section> &sections, int pointer, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             std::stack<Objects::Token> values = std::stack<Objects::Token>();
             std::stack<Objects::Token> parameterstack = std::stack<Objects::Token>();
             std::stack<int> braclevels = std::stack<int>();
@@ -52,7 +52,8 @@ namespace Engine {
                     }
                 }
                 if (!value.isoperator) {
-                    if (functions.find(value.value) != functions.end()) {
+                    Objects::Function temp = FindFunction();
+                    if (temp.exist) {
                         paramcounts.push(functions[value.value].parametercount);
                         braclevels.push(braclevel);
                     }
@@ -66,11 +67,11 @@ namespace Engine {
                     }
                     paramcounts.pop();
                     braclevels.pop();
-                    std::map<std::string, Objects::Value> parameters;
+                    std::map<std::string, Objects::Value*> parameters;
                     for (int i = 0; i < functions[values.top().value].parametercount; i++) {
                         Objects::Value param = Builtins::Copy(ConvertTokenToValue(parameterstack.top(), variables));
                         param.varname = functions[values.top().value].parameternames[i];
-                        parameters[param.varname] = param;
+                        *parameters[param.varname] = param;
                         parameterstack.pop();
                     }
                     if (functions[values.top().value].builtin) {
@@ -95,7 +96,7 @@ namespace Engine {
         }
 
 
-        Objects::Value IF(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value IF(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             bool passed = true;
             for (int i = 0; i < sections[pointer].conditions.size(); i++) {
                 Objects::Value pass = EVALUATE(sections[pointer].conditions, i, variables, functions);
@@ -122,7 +123,7 @@ namespace Engine {
         }
 
 
-        Objects::Value WHILE(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value WHILE(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             bool passed = true;
             while (passed) {
                 for (int i = 0; i < sections[pointer].conditions.size(); i++) {
@@ -157,7 +158,7 @@ namespace Engine {
         }
 
 
-        Objects::Value TRY(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value TRY(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             Objects::Value result = EXECUTE(sections[pointer].sections, variables, functions);
             if (result.isexception) {
                 if (sections.size() > pointer + 1) { 
@@ -177,7 +178,7 @@ namespace Engine {
         }
 
 
-        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions) {
+        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
             std::vector<Objects::Value> params;
             Objects::Value temp = ConvertTokenToValue(values.top(), variables);
             if (temp._functions.find(operation) != temp._functions.end()) {
@@ -210,11 +211,11 @@ namespace Engine {
                         return Builtins::LESSER(params[0], params[1]);
                     }
                 } else {
-                    std::map<std::string, Objects::Value> parameters;
+                    std::map<std::string, Objects::Value*> parameters;
                     for (int i = 0; i < temp._functions[operation].parametercount; i++) {
                         Objects::Value param = Builtins::Copy(params[i]);
                         param.varname = temp._functions[operation].parameternames[i];
-                        parameters[param.varname] = param;
+                        *parameters[param.varname] = param;
                     }
                     return EXECUTE(temp._functions[operation].function, parameters, functions);
                 }
@@ -224,7 +225,7 @@ namespace Engine {
         }
 
 
-        Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, Objects::Value> &variables) {
+        Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, Objects::Value*> &variables) {
             Objects::Value returnvalue;
             switch (token.ident) {
                 case Objects::TokenType::_int:
@@ -249,7 +250,7 @@ namespace Engine {
                     break;
                 default:
                     if (variables.find(token.value) != variables.end()) {
-                        returnvalue = variables[token.value];
+                        returnvalue = *variables[token.value];
                         returnvalue.isvar = true;
                     } else {
                         returnvalue = Builtins::_none();
@@ -292,7 +293,7 @@ namespace Engine {
         }
 
 
-        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::map<std::string, Objects::Value> &variables, std::map<std::string, Objects::Function> &functions, int &braclevel) {
+        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions, int &braclevel) {
             switch (_operator.ident) {
                 case Objects::TokenType::assign: {
                     Objects::Value result = CallBasicOperation(values, "ASSIGN", variables, functions);
@@ -404,5 +405,13 @@ namespace Engine {
             }
             return Objects::Value();
         }
+
+
+        Objects::Value* FindValue(Objects::Token value, std::map<std::string, Objects::Value*> &variables) {
+            if (value.value)
+        }
+
+
+        Objects::Function FindFunction(Objects::Token value, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions);
     }
 }

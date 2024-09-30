@@ -167,7 +167,7 @@ namespace Engine {
         }
 
 
-        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value> &variables) {
+        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, Objects::Value*> &variables) {
             if (!value1.isvar) {
                 return RaiseException("you may not assign a value to an immediate", 1);
             }
@@ -175,7 +175,7 @@ namespace Engine {
             assignment.isvar = true;
             assignment.varname = value1.varname;
             assignment._functions = value2._functions;
-            variables[assignment.varname] = assignment;
+            *variables[assignment.varname] = assignment;
             return Objects::Value();
         }
 
@@ -227,17 +227,17 @@ namespace Engine {
         }
 
 
-        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value> parameters) {
+        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, Objects::Value*> parameters) {
             if (funcname == "print") {
-                return print(parameters["printv"]);
+                return print(*parameters["printv"]);
             } else if (funcname == "input") {
                 return input();
             } else if (funcname == "typeof") {
-                return _typeof(parameters["var"]);
+                return _typeof(*parameters["var"]);
             } else if (funcname == "raise") {
-                return raise(parameters["what"]);
+                return raise(*parameters["what"]);
             } else if (funcname == "toString") {
-                return ToString(parameters["var"]);
+                return ToString(*parameters["var"]);
             }
             return Objects::Value();
         }
@@ -315,12 +315,12 @@ namespace Engine {
             what.type = "string";
             what.varname = "what";
             what._string = pwhat;
-            returnvalue._attributes["what"] = what;
+            *returnvalue._attributes["what"] = what;
             Objects::Value code;
             code.type = "int";
             code.varname = "code";
             code._int = pcode;
-            returnvalue._attributes["code"] = code;
+            *returnvalue._attributes["code"] = code;
             returnvalue.isexception = true;
             return returnvalue;
         }

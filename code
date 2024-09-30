@@ -1,3 +1,6 @@
 func main() {
-	print(6.0 - 2.0);
+	try {
+		raise("TEST");
+	}
+	print(ex.what)
 }
