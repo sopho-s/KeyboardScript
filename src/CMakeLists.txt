@@ -1,5 +1,7 @@
 project(KeyboardScript)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 add_subdirectory(Engine)
 
 add_executable(Key main.cpp)

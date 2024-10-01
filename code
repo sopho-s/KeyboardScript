@@ -4,5 +4,5 @@ func main() {
 	}
 	c = "test";
 	print(c);
-	print(ex.code);
+	print(ex.what);
 }

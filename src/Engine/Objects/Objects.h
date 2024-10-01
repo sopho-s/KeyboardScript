@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <memory>
 
 
 namespace Engine {
@@ -92,7 +93,7 @@ namespace Engine {
             float _float = 0;
             bool _bool = true;
             std::string _string = "";
-            std::map<std::string, Value*> _attributes;
+            std::map<std::string, std::shared_ptr<Value>> _attributes;
             std::map<std::string, Function> _functions;
             Value() {;}
 
@@ -106,9 +107,8 @@ namespace Engine {
                 this->_float = val._float;
                 this->_bool = val._bool;
                 this->_string = val._string;
-                for (std::pair<std::string, Value*> element : val._attributes) {
-                    this->_attributes[element.first] = new Value();
-                    *this->_attributes[element.first] = *element.second;
+                for (std::pair<std::string, std::shared_ptr<Value>> element : val._attributes) {
+                    this->_attributes[element.first] = std::make_shared<Objects::Value>(*element.second);
                 }
                 for (std::pair<std::string, Function> element : val._functions) {
                     this->_functions[element.first] = element.second;
