@@ -6,7 +6,7 @@ namespace Engine {
             if (value.type == "string") {
                 return value;
             } else if (value.type == "int") {
-                value._string = std::to_string((float)value._int);
+                value._string = std::to_string(value._int);
                 value._int = 0;
                 value.type = "string";
                 return value;
@@ -31,14 +31,17 @@ namespace Engine {
         Objects::Value ADD(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "string" || value2.type == "string") {
+                returnvalue = _string();
                 returnvalue._string = Builtins::ToString(value1)._string + Builtins::ToString(value2)._string;
                 returnvalue.type = "string";
                 returnvalue.isvar = false;
             } else if (value1.type == "int" && value2.type == "int") {
+                returnvalue = _int();
                 returnvalue._int = value1._int + value2._int;
                 returnvalue.type = "int";
                 returnvalue.isvar = false;
             } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue = _float();
                 returnvalue._float = (float)value1._int + (float)value2._int + value1._float + value2._float;
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
@@ -50,10 +53,12 @@ namespace Engine {
         Objects::Value SUB(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "int" && value2.type == "int") {
+                returnvalue = _int();
                 returnvalue._int = value1._int - value2._int;
                 returnvalue.type = "int";
                 returnvalue.isvar = false;
             } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue = _float();
                 returnvalue._float = - (float)value2._int + (float)value1._int - value2._float + value1._float;
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
@@ -65,6 +70,7 @@ namespace Engine {
         Objects::Value DIV(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue = _float();
                 returnvalue._float = ((float)value1._int + value1._float) / ((float)value2._int + value2._float);
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
@@ -76,10 +82,12 @@ namespace Engine {
         Objects::Value MUL(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "int" && value2.type == "int") {
+                returnvalue = _int();
                 returnvalue._int = value2._int * value1._int;
                 returnvalue.type = "int";
                 returnvalue.isvar = false;
             } else if ((value1.type == "float" || value1.type == "int") && (value2.type == "float" || value2.type == "int")) {
+                returnvalue = _float();
                 returnvalue._float = ((float)value2._int + value2._float) * ((float)value1._int + value1._float);
                 returnvalue.type = "float";
                 returnvalue.isvar = false;
@@ -90,6 +98,7 @@ namespace Engine {
 
         Objects::Value EQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             temp._bool = ToString(value1)._string == ToString(value2)._string;
             return temp;
@@ -98,6 +107,7 @@ namespace Engine {
 
         Objects::Value NOTEQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             temp._bool = ToString(value1)._string != ToString(value2)._string;
             return temp;
@@ -106,6 +116,7 @@ namespace Engine {
 
         Objects::Value GREATEREQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int >= value2._int;
@@ -115,6 +126,8 @@ namespace Engine {
                 temp._bool = value1._float >= value2._float;
             } else if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int >= value2._float;
+            } else {
+                return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
             }
             return temp;
         }
@@ -122,6 +135,7 @@ namespace Engine {
 
         Objects::Value LESSEREQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int <= value2._int;
@@ -131,6 +145,8 @@ namespace Engine {
                 temp._bool = value1._float <= value2._float;
             } else if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int <= value2._float;
+            } else {
+                return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
             }
             return temp;
         }
@@ -138,6 +154,7 @@ namespace Engine {
 
         Objects::Value LESSER(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int < value2._int;
@@ -147,6 +164,8 @@ namespace Engine {
                 temp._bool = value1._float < value2._float;
             } else if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int < value2._float;
+            } else {
+                return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
             }
             return temp;
         }
@@ -154,6 +173,7 @@ namespace Engine {
 
         Objects::Value GREATER(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
+            temp = _bool();
             temp.type = "bool";
             if (value1.type == "int" && value2.type == "int") {
                 temp._bool = value1._int > value2._int;
@@ -180,8 +200,6 @@ namespace Engine {
             assignment._functions = value2._functions;
             Objects::Value *store = FindValue(value1, variables);
             *store = assignment;
-            Logging::Log("VAR1 NAME " + value1.varname);
-            Logging::Log("VAR2 NAME " + value2.varname);
             return Objects::Value();
         }
 
@@ -232,6 +250,14 @@ namespace Engine {
         }
 
 
+        Objects::Value _timesec() {
+            int now = (int)time(NULL);
+            Objects::Value returnvalue = _int();
+            returnvalue._int = now;
+            return returnvalue;
+        }
+
+
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, std::shared_ptr<Objects::Value>> parameters) {
             if (funcname == "print") {
                 return print(*parameters["printv"]);
@@ -241,8 +267,10 @@ namespace Engine {
                 return _typeof(*parameters["var"]);
             } else if (funcname == "raise") {
                 return raise(*parameters["what"]);
-            } else if (funcname == "toString") {
+            } else if (funcname == "to_string") {
                 return ToString(*parameters["var"]);
+            } else if (funcname == "time_seconds") {
+                return _timesec();
             }
             return Objects::Value();
         }
@@ -252,6 +280,7 @@ namespace Engine {
             Objects::Value returnvalue;
             returnvalue.type = "string";
             returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
             returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
             returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
             returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
@@ -267,6 +296,10 @@ namespace Engine {
             returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
             returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
             returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
+            returnvalue._functions["SUBASSIGN"] = Objects::Function("SUBASSIGN", "", 2);
+            returnvalue._functions["DIVASSIGN"] = Objects::Function("DIVASSIGN", "", 2);
+            returnvalue._functions["MULASSIGN"] = Objects::Function("MULASSIGN", "", 2);
             returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
             returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
             returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);
@@ -295,6 +328,10 @@ namespace Engine {
             returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
             returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
             returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
+            returnvalue._functions["SUBASSIGN"] = Objects::Function("SUBASSIGN", "", 2);
+            returnvalue._functions["DIVASSIGN"] = Objects::Function("DIVASSIGN", "", 2);
+            returnvalue._functions["MULASSIGN"] = Objects::Function("MULASSIGN", "", 2);
             returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
             returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
             returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);

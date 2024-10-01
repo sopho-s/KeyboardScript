@@ -216,9 +216,12 @@ namespace Engine {
 
         Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             std::vector<Objects::Value> params;
-            for (int i = 0; i < 2; i++) {
-                Logging::Log((int)values.size());
-                Logging::Log("PARAM " + values.top().value);
+            if (operation != "NOT" && operation != "INCREMENT" && operation != "DECREMENT") {
+                for (int i = 0; i < 2; i++) {
+                    params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
+                    values.pop();
+                }
+            } else {
                 params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
                 values.pop();
             }
@@ -226,6 +229,14 @@ namespace Engine {
                 if (params[0]._functions[operation].builtin) {
                     if (operation == "ASSIGN") {
                         return Builtins::ASSIGN(params[0], params[1], variables);
+                    } else if (operation == "ADDASSIGN") {
+                        return Builtins::ASSIGN(params[0], Builtins::ADD(params[0], params[1]), variables);
+                    } else if (operation == "SUBASSIGN") {
+                        return Builtins::ASSIGN(params[0], Builtins::SUB(params[0], params[1]), variables);
+                    } else if (operation == "DIVASSIGN") {
+                        return Builtins::ASSIGN(params[0], Builtins::DIV(params[0], params[1]), variables);
+                    } else if (operation == "MULASSIGN") {
+                        return Builtins::ASSIGN(params[0], Builtins::MUL(params[0], params[1]), variables);
                     } else if (operation == "EQUAL") {
                         return Builtins::EQUAL(params[0], params[1]);
                     } else if (operation == "NOTEQUAL") {
@@ -257,7 +268,8 @@ namespace Engine {
                     return EXECUTE(params[0]._functions[operation].function, parameters, functions, classtemp);
                 }
             } else {
-                return Builtins::RaiseException("type \"" + params[0].type + "\" has no \"" + operation + "\" function", 0);
+                Logging::Log((int)params[0]._functions.size());
+                return Builtins::RaiseException("\"" + params[0].varname + "\" of type \"" + params[0].type + "\" has no \"" + operation + "\" function", 0);
             }
         }
 
@@ -332,6 +344,42 @@ namespace Engine {
             switch (_operator.ident) {
                 case Objects::TokenType::assign: {
                     Objects::Value result = CallBasicOperation(values, "ASSIGN", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
+                case Objects::TokenType::addassign: {
+                    Objects::Value result = CallBasicOperation(values, "ADDASSIGN", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
+                case Objects::TokenType::subassign: {
+                    Objects::Value result = CallBasicOperation(values, "AUBASSIGN", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
+                case Objects::TokenType::divassign: {
+                    Objects::Value result = CallBasicOperation(values, "DIVASSIGN", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
+                case Objects::TokenType::mulassign: {
+                    Objects::Value result = CallBasicOperation(values, "MULASSIGN", variables, functions, classtemp);
                     if (result.isexception || result.isreturn) {
                         return result;
                     } else {

@@ -3,6 +3,7 @@
 #include "../Objects/Objects.h"
 #include "../Logging/Errors.h"
 #include <iostream>
+#include <time.h>
 #include "../Misc/String.h"
 
 namespace Engine {
@@ -56,6 +57,9 @@ namespace Engine {
 
 
         Objects::Value _typeof(Objects::Value value);
+
+
+        Objects::Value _time();
 
 
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, std::shared_ptr<Objects::Value>> parameters);
