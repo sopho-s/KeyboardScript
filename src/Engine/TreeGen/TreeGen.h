@@ -8,8 +8,9 @@
 
 namespace Engine {
     namespace TreeGen {
+        std::vector<std::string> FindImport(std::vector<Objects::Token> &tokens);
 
-
+        
         /**
          * @brief Finds the start and end bounds until a specific token and makes it a section
          * 

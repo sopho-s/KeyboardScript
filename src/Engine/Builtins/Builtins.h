@@ -84,5 +84,8 @@ namespace Engine {
 
 
         Objects::Value* FindValue(Objects::Value value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables);
+
+
+        void AddBuiltins(std::map<std::string, Objects::Function>& functions, std::map<std::string, std::map<std::string, Objects::Function>>& classtemps);
     }
 }

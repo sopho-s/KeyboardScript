@@ -399,5 +399,15 @@ namespace Engine {
                 return returnvalue;
             }
         }
+
+
+        void AddBuiltins(std::map<std::string, Objects::Function>& functions, std::map<std::string, std::map<std::string, Objects::Function>>& classtemps) {
+            functions["print"] = Objects::Function("print", "", 1, {"printv"});
+            functions["raise"] = Objects::Function("raise", "", 1, {"what"});
+            functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});
+            functions["input"] = Objects::Function("input", "", 0);
+            functions["time_seconds"] = Objects::Function("time_seconds", "", 0);
+            functions["to_string"] = Objects::Function("to_string", "", 1, {"var"});
+        }
     }
 }

@@ -26,6 +26,22 @@ namespace Engine {
         std::map<Objects::TokenType, int> precedence(precvec.begin(), precvec.end());
         std::vector<Objects::TokenType> operators = {Objects::greater, Objects::lesser, Objects::notequal, Objects::equal, Objects::greaterequal, Objects::lesserequal, Objects::assign, Objects::addassign, Objects::subassign, Objects::divassign, Objects::mulassign, Objects::modassign, Objects::_and, Objects::_or, Objects::_not, Objects::div, Objects::mul, Objects::mod, Objects::sub, Objects::add, Objects::openbracket, Objects::closebracket};
         std::vector<Objects::TokenType> values = {Objects::_return, Objects::_int, Objects::_float, Objects::_string, Objects::ident, Objects::_class, Objects::_else, Objects::_if, Objects::func, Objects::_while};
+        
+
+        std::vector<std::string> FindImport(std::vector<Objects::Token> &tokens) {
+            std::vector<std::string> returnvals;
+            for (int i = 0; i < tokens.size() - 1; i++) {
+                if (tokens[i].value == "import") {
+                    returnvals.push_back(tokens[i+1].value);
+                    tokens.erase(tokens.begin() + i);
+                    tokens.erase(tokens.begin() + i);
+                    i--;
+                }
+            }
+            return returnvals;
+        }
+        
+        
         void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index) {
             Objects::Token pausetoken = tokens[index]; 
             while (true) {

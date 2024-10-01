@@ -14,5 +14,8 @@ namespace Engine {
      * 
      * @param _args The arguments
      */
-    void AnalyseFile(args _args);
+    std::pair<std::map<std::string, Objects::Function>, std::map<std::string, std::map<std::string, Objects::Function>>> AnalyseFile(args _args);
+
+    
+    void RunCode(std::map<std::string, Objects::Function> functions, std::map<std::string, std::map<std::string, Objects::Function>> classtemps);
 }

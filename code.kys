@@ -1,0 +1,5 @@
+import other
+
+func main() {
+	testfunc();
+}
