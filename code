@@ -1,8 +1,18 @@
-func main() {
-	try {
-		raise("Balls");
+class new {
+	func new(self) {
+		self.test = "temp";
+		return self;
 	}
-	c = "test";
-	print(c);
-	print(ex.what);
+
+	func newtest(self) {
+		print("test");
+		print(self.test);
+	}
+}
+
+
+func main() {
+	testvar = new();
+	print(testvar.test);
+	testvar.newtest();
 }

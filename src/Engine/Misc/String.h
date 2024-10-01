@@ -7,5 +7,8 @@ namespace Engine {
 
 
         int Count(std::string string, std::string key);
+
+
+        std::string Random(int length);
     }
 }

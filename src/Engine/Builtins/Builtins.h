@@ -3,6 +3,7 @@
 #include "../Objects/Objects.h"
 #include "../Logging/Errors.h"
 #include <iostream>
+#include "../Misc/String.h"
 
 namespace Engine {
     namespace Builtins {
@@ -76,5 +77,8 @@ namespace Engine {
 
 
         Objects::Value RaiseException(std::string pwhat, int pcode);
+
+
+        Objects::Value* FindValue(Objects::Value value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables);
     }
 }

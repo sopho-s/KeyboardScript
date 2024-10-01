@@ -22,6 +22,7 @@ namespace Engine {
         }
         Logging::Log("Abstract syntax tree generation was performed successfully");
         std::map<std::string, Objects::Function> functions = TreeGen::GetAllFunction(sections);
+        std::map<std::string, std::map<std::string, Objects::Function>> classtemps = TreeGen::GetAllClasses(sections);
         functions["print"] = Objects::Function("print", "", 1, {"printv"});
         functions["raise"] = Objects::Function("raise", "", 1, {"what"});
         functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});
@@ -29,7 +30,7 @@ namespace Engine {
         functions["toString"] = Objects::Function("toString", "", 1, {"var"});
         Logging::Log("Function finding was performed successfully");
         std::map<std::string, std::shared_ptr<Objects::Value>> values;
-        Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions);
+        Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions, classtemps);
         if (!out.isexception) {
             Logging::Log("Execution was performed successfully");
         } else {

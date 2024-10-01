@@ -87,6 +87,7 @@ namespace Engine {
         struct Value {
             bool isvar = false;
             bool isexception = false;
+            bool isreturn = false;
             std::string varname = "";
             std::string type = "null";
             int _int = 0;
@@ -101,6 +102,7 @@ namespace Engine {
             Value(const Value& val) {
                 this->isvar = val.isvar;
                 this->isexception = val.isexception;
+                this->isreturn = val.isreturn;
                 this->varname = val.varname;
                 this->type = val.type;
                 this->_int = val._int;

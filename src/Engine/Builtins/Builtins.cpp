@@ -20,8 +20,11 @@ namespace Engine {
                 value._float = 0;
                 value.type = "string";
                 return value;
+            } else {
+                value._string = value.type;
+                value.type = "string";
+                return value;
             }
-            return value;
         }
 
 
@@ -171,13 +174,14 @@ namespace Engine {
             if (!value1.isvar) {
                 return RaiseException("you may not assign a value to an immediate", 1);
             }
-            Logging::Log("ASSIGNMENT " + value1.varname);
-            Logging::Log("ASSIGNMENT " + value2._string);
             Objects::Value assignment = value2;
             assignment.isvar = true;
             assignment.varname = value1.varname;
             assignment._functions = value2._functions;
-            variables[assignment.varname] = std::make_shared<Objects::Value>(assignment);
+            Objects::Value *store = FindValue(value1, variables);
+            *store = assignment;
+            Logging::Log("VAR1 NAME " + value1.varname);
+            Logging::Log("VAR2 NAME " + value2.varname);
             return Objects::Value();
         }
 
@@ -324,6 +328,39 @@ namespace Engine {
             returnvalue._attributes["code"] = std::make_shared<Objects::Value>(code);
             returnvalue.isexception = true;
             return returnvalue;
+        }
+
+        Objects::Value* FindValue(Objects::Value value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables) {
+            std::string origvalue = value.varname;
+            Objects::Value *returnvalue;
+            std::map<std::string, std::shared_ptr<Objects::Value>> *currlist = &variables;
+            int pointloc = Misc::Contains(value.varname, ".");
+            if (pointloc != -1) {
+                int prevpointloc = 0;
+                while (pointloc != -1) {
+                    std::string substr = value.varname.substr(prevpointloc, pointloc-prevpointloc);
+                    value.varname = value.varname.substr(pointloc + 1, value.varname.size()-pointloc-1);
+                    prevpointloc = pointloc;
+                    if (currlist->find(substr) == currlist->end()) {
+                        (*currlist)[substr] = std::make_unique<Objects::Value>(_none());
+                    }
+                    returnvalue = (*currlist)[substr].get();
+                    currlist = &returnvalue->_attributes;
+                    pointloc = Misc::Contains(value.varname, ".");
+                }
+                if (currlist->find(value.varname) == currlist->end()) {
+                    (*currlist)[value.varname] = std::make_unique<Objects::Value>(_none());
+                }
+                returnvalue = (*currlist)[value.varname].get();
+                return returnvalue;
+            } else {
+                if (currlist->find(origvalue) == currlist->end()) {
+                    (*currlist)[origvalue] = std::make_unique<Objects::Value>(_none());
+                }
+                returnvalue = (*currlist)[origvalue].get();
+                returnvalue->isvar = true;
+                return returnvalue;
+            }
         }
     }
 }

@@ -46,5 +46,8 @@ namespace Engine {
 
 
         std::map<std::string, Objects::Function> GetAllFunction(std::vector<Objects::Section> &sections);
+
+
+        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<Objects::Section> &sections);
     }
 }

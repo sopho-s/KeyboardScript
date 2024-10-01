@@ -25,7 +25,7 @@ namespace Engine {
                                                                 {Objects::comma, 3}};
         std::map<Objects::TokenType, int> precedence(precvec.begin(), precvec.end());
         std::vector<Objects::TokenType> operators = {Objects::greater, Objects::lesser, Objects::notequal, Objects::equal, Objects::greaterequal, Objects::lesserequal, Objects::assign, Objects::addassign, Objects::subassign, Objects::divassign, Objects::mulassign, Objects::modassign, Objects::_and, Objects::_or, Objects::_not, Objects::div, Objects::mul, Objects::mod, Objects::sub, Objects::add, Objects::openbracket, Objects::closebracket};
-        std::vector<Objects::TokenType> values = {Objects::_int, Objects::_float, Objects::_string, Objects::ident, Objects::_class, Objects::_else, Objects::_if, Objects::func, Objects::_while};
+        std::vector<Objects::TokenType> values = {Objects::_return, Objects::_int, Objects::_float, Objects::_string, Objects::ident, Objects::_class, Objects::_else, Objects::_if, Objects::func, Objects::_while};
         void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index) {
             Objects::Token pausetoken = tokens[index]; 
             while (true) {
@@ -161,6 +161,7 @@ namespace Engine {
                         Objects::Function newfunc;
                         newfunc.name = section.tokens[1].value;
                         newfunc.builtin = false;
+                        newfunc.exist = true;
                         newfunc._namespace = "main";
                         if (section.tokens.size() > 2) {
                             for (int i = 3; i < section.tokens.size() - 1; i++) {
@@ -174,6 +175,19 @@ namespace Engine {
                         }
                         newfunc.function = section.sections;
                         returnvals[section.tokens[1].value] = newfunc;
+                    }
+                }
+            }
+            return returnvals;
+        }
+
+
+        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<Objects::Section> &sections) {
+            std::map<std::string, std::map<std::string, Objects::Function>> returnvals;
+            for (Objects::Section section : sections) {
+                if (section.tokens.size() > 0) {
+                    if (section.tokens[0].ident == Objects::_class) {
+                        returnvals[section.tokens[1].value] = GetAllFunction(section.sections);
                     }
                 }
             }

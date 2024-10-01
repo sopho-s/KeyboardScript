@@ -1,4 +1,5 @@
 #include "String.h"
+#include <cstdlib>
 
 namespace Engine {
     namespace Misc {
@@ -34,6 +35,16 @@ namespace Engine {
                 }
             }
             return count;
+        }
+
+
+        std::string Random(int length) {
+            std::srand(128390128);
+            std::string randomstr = "";
+            for (int i = 0; i < length; i++) {
+                randomstr += 'a' + rand()%26;
+            }
+            return randomstr;
         }
     }
 }
