@@ -28,12 +28,12 @@ namespace Engine {
         functions["input"] = Objects::Function("input", "", 0);
         functions["toString"] = Objects::Function("toString", "", 1, {"var"});
         Logging::Log("Function finding was performed successfully");
-        std::map<std::string, Objects::Value> values;
+        std::map<std::string, Objects::Value*> values;
         Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions);
         if (!out.isexception) {
             Logging::Log("Execution was performed successfully");
         } else {
-            Logging::Log(Logging::Error(0, 0, out._attributes["code"]._int, out._attributes["what"]._string));
+            Logging::Log(Logging::Error(0, 0, out._attributes["code"]->_int, out._attributes["what"]->_string));
         }
     }
 }

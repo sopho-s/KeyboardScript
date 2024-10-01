@@ -42,6 +42,8 @@ namespace Engine {
             std::stack<Objects::Token> parameterstack = std::stack<Objects::Token>();
             std::stack<int> braclevels = std::stack<int>();
             std::stack<int> paramcounts = std::stack<int>();
+            std::stack<Objects::Function> funcs = std::stack<Objects::Function>();
+            std::map<std::string, Objects::Value*> parameters = std::map<std::string, Objects::Value*>();
             Objects::Value lastresult;
             int braclevel = 0;
             for (Objects::Token value : sections[pointer].tokens) {
@@ -52,43 +54,42 @@ namespace Engine {
                     }
                 }
                 if (!value.isoperator) {
-                    Objects::Function temp = FindFunction();
-                    if (temp.exist) {
-                        paramcounts.push(functions[value.value].parametercount);
+                    std::pair<Objects::Function, Objects::Value*> temp = FindFunction(value, variables, functions);
+                    if (temp.first.exist) {
+                        paramcounts.push(temp.first.parametercount);
+                        funcs.push(temp.first);
+                        if (temp.second->type != "none") {
+                            parameters["self"] = temp.second;
+                        }
                         braclevels.push(braclevel);
                     }
                     values.push(value);
                 } else if (!braclevels.empty() && braclevel == braclevels.top()) {
-                    int paramleft = paramcounts.top();
-                    while (paramleft > 0) {
-                        paramleft--;
+                    while (paramcounts.top() > parameterstack.size()) {
                         parameterstack.push(values.top());
                         values.pop();
                     }
                     paramcounts.pop();
                     braclevels.pop();
-                    std::map<std::string, Objects::Value*> parameters;
-                    for (int i = 0; i < functions[values.top().value].parametercount; i++) {
+                    for (int i = 0; i < funcs.top().parametercount; i++) {
                         Objects::Value param = Builtins::Copy(ConvertTokenToValue(parameterstack.top(), variables));
-                        param.varname = functions[values.top().value].parameternames[i];
+                        param.varname = funcs.top().parameternames[i];
+                        parameters[param.varname] = new Objects::Value();
                         *parameters[param.varname] = param;
                         parameterstack.pop();
                     }
-                    if (functions[values.top().value].builtin) {
-                        Objects::Value temp = Builtins::BuiltinCall(values.top().value, parameters);
-                        if (temp.isexception) {
-                            return temp;
-                        }
-                        values.pop();
-                        values.push(ConvertValueToToken(temp));
+                    Objects::Value temp;
+                    if (funcs.top().builtin) {
+                        temp = Builtins::BuiltinCall(values.top().value, parameters);
                     } else {
-                        Objects::Value temp = EXECUTE(functions[values.top().value].function, parameters, functions);
-                        if (temp.isexception) {
-                            return temp;
-                        }
-                        values.pop();
-                        values.push(ConvertValueToToken(temp));
+                        temp = EXECUTE(funcs.top().function, parameters, functions);
                     }
+                    if (temp.isexception) {
+                        return temp;
+                    }
+                    funcs.pop();
+                    values.pop();
+                    values.push(ConvertValueToToken(&temp));
                 }
                 lastresult = ConvertTokenToValue(values.top(), variables);
             }
@@ -146,7 +147,7 @@ namespace Engine {
                         if (sections[pointer + 1].tokens.size() > 0) {
                             if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
                                 Objects::Value result = WHILE(sections, ++pointer, variables, functions);
-                                if (result.type == "exception") {
+                                if (result.isexception) {
                                     return result;
                                 }
                             }
@@ -159,8 +160,11 @@ namespace Engine {
 
 
         Objects::Value TRY(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
-            Objects::Value result = EXECUTE(sections[pointer].sections, variables, functions);
-            if (result.isexception) {
+            Objects::Value* result = new Objects::Value();
+            *result = EXECUTE(sections[pointer].sections, variables, functions);
+            if (result->isexception) {
+                variables["ex"] = new Objects::Value();
+                variables["ex"] = result;
                 if (sections.size() > pointer + 1) { 
                     if (sections[pointer + 1].tokens.size() > 0) {
                         if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
@@ -173,7 +177,9 @@ namespace Engine {
                 } else {
                     return Objects::Value();
                 }
+                return Objects::Value();
             }
+            delete result;
             return Objects::Value();
         }
 
@@ -226,6 +232,7 @@ namespace Engine {
 
 
         Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, Objects::Value*> &variables) {
+            Lexer::LogToken(token);
             Objects::Value returnvalue;
             switch (token.ident) {
                 case Objects::TokenType::_int:
@@ -249,44 +256,41 @@ namespace Engine {
                     returnvalue._string = token.value;
                     break;
                 default:
-                    if (variables.find(token.value) != variables.end()) {
-                        returnvalue = *variables[token.value];
-                        returnvalue.isvar = true;
-                    } else {
-                        returnvalue = Builtins::_none();
-                        returnvalue.varname = token.value;
-                        returnvalue.isvar = true;
+                    if (token.value.size() == 0) {
+                        return returnvalue;
                     }
+                    returnvalue = *FindValue(token, variables);
+                    returnvalue.isvar = true;
             }
             return returnvalue;
         }
 
 
-        Objects::Token ConvertValueToToken(Objects::Value value) {
+        Objects::Token ConvertValueToToken(Objects::Value *value) {
             Objects::Token returntoken;
-            if (value.type == "string") {
+            if (value->type == "string") {
                 returntoken.ident = Objects::TokenType::_string;
-                returntoken.value = value._string;
+                returntoken.value = value->_string;
                 returntoken.isoperator = false;
-            } else if (value.type == "int") {
+            } else if (value->type == "int") {
                 returntoken.ident = Objects::TokenType::_int;
-                returntoken.value = std::to_string(value._int);
+                returntoken.value = std::to_string(value->_int);
                 returntoken.isoperator = false;
-            } else if (value.type == "bool") {
+            } else if (value->type == "bool") {
                 returntoken.ident = Objects::TokenType::_bool;
-                if (value._bool) {
+                if (value->_bool) {
                     returntoken.value = "true";
                 } else {
                     returntoken.value = "false";
                 }
                 returntoken.isoperator = false;
-            } else if (value.type == "float") {
+            } else if (value->type == "float") {
                 returntoken.ident = Objects::TokenType::_float;
-                returntoken.value = std::to_string(value._float);
+                returntoken.value = std::to_string(value->_float);
                 returntoken.isoperator = false;
             } else {
                 returntoken.ident = Objects::TokenType::ident;
-                returntoken.value = value.varname;
+                returntoken.value = value->varname;
                 returntoken.isoperator = false;
             }
             return returntoken;
@@ -300,7 +304,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -309,7 +313,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -318,7 +322,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -327,7 +331,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -336,7 +340,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -345,7 +349,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -354,7 +358,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -363,7 +367,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -372,7 +376,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -381,7 +385,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -390,7 +394,7 @@ namespace Engine {
                     if (result.isexception) {
                         return result;
                     } else {
-                        values.push(ConvertValueToToken(result));
+                        values.push(ConvertValueToToken(&result));
                     }
                     break;
                 }
@@ -408,10 +412,107 @@ namespace Engine {
 
 
         Objects::Value* FindValue(Objects::Token value, std::map<std::string, Objects::Value*> &variables) {
-            if (value.value)
+            std::string origvalue = value.value;
+            Objects::Value* returnvalue = new Objects::Value();
+            std::map<std::string, Objects::Value*> currlist = variables;
+            int pointloc = Misc::Contains(value.value, ".");
+            if (pointloc != -1) {
+                int prevpointloc = 0;
+                while (pointloc != -1) {
+                    std::string substr = value.value.substr(prevpointloc, pointloc-prevpointloc);
+                    value.value = value.value.substr(pointloc + 1, value.value.size()-pointloc-1);
+                    prevpointloc = pointloc;
+                    if (currlist.find(substr) == currlist.end()) {
+                        *returnvalue = Builtins::_none();
+                        returnvalue->varname = origvalue;
+                        returnvalue->isvar = true;
+                        return returnvalue;
+                    }
+                    returnvalue = currlist[substr];
+                    currlist = returnvalue->_attributes;
+                    pointloc = Misc::Contains(value.value, ".");
+                }
+                if (currlist.find(value.value) == currlist.end()) {
+                    returnvalue = new Objects::Value();
+                    *returnvalue = Builtins::_none();
+                    returnvalue->varname = origvalue;
+                    returnvalue->isvar = true;
+                    return returnvalue;
+                }
+                returnvalue = currlist[value.value];
+                return returnvalue;
+            } else {
+                if (currlist.find(origvalue) == currlist.end()) {
+                    returnvalue = new Objects::Value();
+                    *returnvalue = Builtins::_none();
+                    returnvalue->varname = origvalue;
+                    returnvalue->isvar = true;
+                    return returnvalue;
+                } else {
+                    returnvalue = currlist[origvalue];
+                    returnvalue->isvar = true;
+                    return returnvalue;
+                }
+            }
         }
 
 
-        Objects::Function FindFunction(Objects::Token value, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions);
+        std::pair<Objects::Function, Objects::Value*> FindFunction(Objects::Token value, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions) {
+            std::string origvalue = value.value;
+            std::pair<Objects::Function, Objects::Value*> returnpair;
+            Objects::Value* returnvalue = new Objects::Value();
+            std::map<std::string, Objects::Value*> currlist = variables;
+            int pointcount = Misc::Count(value.value, ".");
+            if (Misc::Count(value.value, ".") >= 1) {
+                int pointloc = Misc::Contains(value.value, ".");
+                int prevpointloc = 0;
+                while (Misc::Count(value.value, ".") >= 1) {
+                    std::string substr = value.value.substr(prevpointloc, pointloc-prevpointloc);
+                    value.value = value.value.substr(pointloc + 1, value.value.size()-pointloc-1);
+                    prevpointloc = pointloc;
+                    if (currlist.find(substr) == currlist.end()) {
+                        *returnvalue = Builtins::_none();
+                        returnvalue->varname = origvalue;
+                        returnvalue->isvar = true;
+                        returnpair.second = returnvalue;
+                        returnpair.first = Objects::Function();
+                        return returnpair;
+                    }
+                    returnvalue = currlist[substr];
+                    currlist = returnvalue->_attributes;
+                    int pointloc = Misc::Contains(value.value, ".");
+                }
+                if (returnvalue->_functions.find(value.value) == returnvalue->_functions.end()) {
+                    returnvalue = new Objects::Value();
+                    *returnvalue = Builtins::_none();
+                    returnvalue->varname = origvalue;
+                    returnvalue->isvar = true;
+                    returnpair.second = returnvalue;
+                    returnpair.first = Objects::Function();
+                    return returnpair;
+                }
+                returnpair.first = returnvalue->_functions[value.value];
+                returnpair.second = returnvalue;
+                return returnpair;
+            } else {
+                if (functions.find(origvalue) == functions.end()) {
+                    returnvalue = new Objects::Value();
+                    *returnvalue = Builtins::_none();
+                    returnvalue->varname = origvalue;
+                    returnvalue->isvar = true;
+                    returnpair.first = Objects::Function();
+                    returnpair.second = returnvalue;
+                    return returnpair;
+                } else {
+                    returnvalue = new Objects::Value();
+                    *returnvalue = Builtins::_none();
+                    returnvalue->varname = origvalue;
+                    returnvalue->isvar = true;
+                    returnpair.first = functions[origvalue];
+                    returnpair.second = returnvalue;
+                    return returnpair;
+                }
+            }
+        }
     }
 }

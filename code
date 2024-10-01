@@ -1,6 +1,8 @@
 func main() {
 	try {
-		raise("TEST");
+		raise("Balls");
 	}
-	print(ex.what)
+	c = "test";
+	print(c);
+	print(ex.code);
 }

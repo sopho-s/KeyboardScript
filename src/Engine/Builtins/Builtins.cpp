@@ -171,10 +171,13 @@ namespace Engine {
             if (!value1.isvar) {
                 return RaiseException("you may not assign a value to an immediate", 1);
             }
+            Logging::Log("ASSIGNMENT " + value1.varname);
+            Logging::Log("ASSIGNMENT " + value2._string);
             Objects::Value assignment = value2;
             assignment.isvar = true;
             assignment.varname = value1.varname;
             assignment._functions = value2._functions;
+            variables[assignment.varname] = new Objects::Value();
             *variables[assignment.varname] = assignment;
             return Objects::Value();
         }
@@ -188,7 +191,6 @@ namespace Engine {
             value._float = pvalue._float;
             value._bool = pvalue._bool;
             value._string = pvalue._string;
-            value._list = pvalue._list;
             value._attributes = pvalue._attributes;
             value._functions = pvalue._functions;
             value.isvar = true;
@@ -315,11 +317,13 @@ namespace Engine {
             what.type = "string";
             what.varname = "what";
             what._string = pwhat;
+            returnvalue._attributes["what"] = new Objects::Value();
             *returnvalue._attributes["what"] = what;
             Objects::Value code;
             code.type = "int";
             code.varname = "code";
             code._int = pcode;
+            returnvalue._attributes["code"] = new Objects::Value();
             *returnvalue._attributes["code"] = code;
             returnvalue.isexception = true;
             return returnvalue;

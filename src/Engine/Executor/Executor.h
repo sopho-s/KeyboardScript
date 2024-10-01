@@ -4,7 +4,9 @@
 #include "../TreeGen/TreeGen.h"
 #include "../Objects/Objects.h"
 #include "../Builtins/Builtins.h"
+#include "../Misc/String.h"
 #include <stack>
+#include <utility>
 
 namespace Engine {
     namespace Executor {
@@ -31,7 +33,7 @@ namespace Engine {
         Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, Objects::Value*> &variables);
 
 
-        Objects::Token ConvertValueToToken(Objects::Value token);
+        Objects::Token ConvertValueToToken(Objects::Value *token);
 
 
         Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions, int &braclevel);
@@ -40,6 +42,6 @@ namespace Engine {
         Objects::Value* FindValue(Objects::Token value, std::map<std::string, Objects::Value*> &variables);
 
 
-        Objects::Function FindFunction(Objects::Token value, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions);
+        std::pair<Objects::Function, Objects::Value*> FindFunction(Objects::Token value, std::map<std::string, Objects::Value*> &variables, std::map<std::string, Objects::Function> &functions);
     }
 }

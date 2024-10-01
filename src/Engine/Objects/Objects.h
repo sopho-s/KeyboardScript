@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <iostream>
 
 
 namespace Engine {
@@ -67,6 +68,7 @@ namespace Engine {
                 this->name = name;
                 this->_namespace = _namespace;
                 this->parametercount = parametercount;
+                this->exist = true;
             }
 
 
@@ -76,6 +78,7 @@ namespace Engine {
                 this->_namespace = _namespace;
                 this->parametercount = parametercount;
                 this->parameternames = parameternames;
+                this->exist = true;
             }
         };
 
@@ -89,9 +92,28 @@ namespace Engine {
             float _float = 0;
             bool _bool = true;
             std::string _string = "";
-            std::vector<Value> _list;
             std::map<std::string, Value*> _attributes;
             std::map<std::string, Function> _functions;
+            Value() {;}
+
+
+            Value(const Value& val) {
+                this->isvar = val.isvar;
+                this->isexception = val.isexception;
+                this->varname = val.varname;
+                this->type = val.type;
+                this->_int = val._int;
+                this->_float = val._float;
+                this->_bool = val._bool;
+                this->_string = val._string;
+                for (std::pair<std::string, Value*> element : val._attributes) {
+                    this->_attributes[element.first] = new Value();
+                    *this->_attributes[element.first] = *element.second;
+                }
+                for (std::pair<std::string, Function> element : val._functions) {
+                    this->_functions[element.first] = element.second;
+                }
+            }
         };
     }
 }

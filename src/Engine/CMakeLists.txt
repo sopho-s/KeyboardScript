@@ -1,5 +1,5 @@
 add_subdirectory(Logging)
-add_subdirectory(Mist)
+add_subdirectory(Misc)
 add_subdirectory(Objects)
 add_subdirectory(Lexer)
 add_subdirectory(TreeGen)
