@@ -1,6 +1,10 @@
+cmake_minimum_required(VERSION 3.28)
+
 project(KeyboardScript)
 
 set(CMAKE_BUILD_TYPE Debug)
+
+add_subdirectory(includes)
 
 add_subdirectory(Engine)
 
@@ -14,4 +18,5 @@ target_link_libraries(Key
     Lexer
     Engine
     ArgsParse
-    TreeGen)
+    TreeGen
+    sparse)
