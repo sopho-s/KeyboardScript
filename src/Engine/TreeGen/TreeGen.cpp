@@ -23,7 +23,7 @@ namespace Engine {
                                                                 {Objects::div, 2},
                                                                 {Objects::mod, 2},
                                                                 {Objects::comma, 3}};
-        std::map<Objects::TokenType, int> precedence(precvec.begin(), precvec.end());
+        std::unordered_map<Objects::TokenType, int> precedence(precvec.begin(), precvec.end());
         std::vector<Objects::TokenType> operators = {Objects::greater, Objects::lesser, Objects::notequal, Objects::equal, Objects::greaterequal, Objects::lesserequal, Objects::assign, Objects::addassign, Objects::subassign, Objects::divassign, Objects::mulassign, Objects::modassign, Objects::_and, Objects::_or, Objects::_not, Objects::div, Objects::mul, Objects::mod, Objects::sub, Objects::add, Objects::openbracket, Objects::closebracket};
         std::vector<Objects::TokenType> values = {Objects::_return, Objects::_int, Objects::_float, Objects::_string, Objects::ident, Objects::_class, Objects::_else, Objects::_if, Objects::func, Objects::_while};
         
@@ -167,8 +167,8 @@ namespace Engine {
         }
 
 
-        std::map<std::string, Objects::Function> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections) {
-            std::map<std::string, Objects::Function> returnvals;
+        std::unordered_map<std::string, std::shared_ptr<Objects::Function>> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections) {
+            std::unordered_map<std::string, std::shared_ptr<Objects::Function>> returnvals;
             for (std::shared_ptr<Objects::Section> section : sections) {
                 if (section->tokens.size() > 0) {
                     if (section->tokens[0].ident == Objects::func) {
@@ -188,7 +188,7 @@ namespace Engine {
                             }
                         }
                         newfunc.function = section->sections;
-                        returnvals[section->tokens[1].value] = newfunc;
+                        returnvals[section->tokens[1].value] = std::make_shared<Objects::Function>(newfunc);
                     }
                 }
             }
@@ -196,8 +196,8 @@ namespace Engine {
         }
 
 
-        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections) {
-            std::map<std::string, std::map<std::string, Objects::Function>> returnvals;
+        std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections) {
+            std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> returnvals;
             for (std::shared_ptr<Objects::Section> section : sections) {
                 if (section->tokens.size() > 0) {
                     if (section->tokens[0].ident == Objects::_class) {

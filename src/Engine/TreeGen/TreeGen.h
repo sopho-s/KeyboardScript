@@ -3,7 +3,7 @@
 #include "../Logging/Errors.h"
 #include "../Objects/Objects.h"
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <stack>
 
 namespace Engine {
@@ -46,9 +46,9 @@ namespace Engine {
         void LogSection(std::shared_ptr<Objects::Section> &section);
 
 
-        std::map<std::string, Objects::Function> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections);
+        std::unordered_map<std::string, std::shared_ptr<Objects::Function>> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections);
 
 
-        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections);
+        std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections);
     }
 }

@@ -41,7 +41,7 @@ namespace Engine {
         Objects::Value GREATER(Objects::Value value1, Objects::Value value2);
 
 
-        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, std::shared_ptr<Objects::Value>> &variables);
+        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables);
 
 
         Objects::Value Copy(Objects::Value value);
@@ -62,7 +62,7 @@ namespace Engine {
         Objects::Value _timesec();
 
 
-        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, std::shared_ptr<Objects::Value>> parameters);
+        Objects::Value BuiltinCall(std::string funcname, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> parameters);
 
 
         Objects::Value _string();
@@ -83,9 +83,9 @@ namespace Engine {
         Objects::Value RaiseException(std::string pwhat, int pcode);
 
 
-        Objects::Value* FindValue(Objects::Value value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables);
+        Objects::Value* FindValue(Objects::Value value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables);
 
 
-        void AddBuiltins(std::map<std::string, Objects::Function>& functions, std::map<std::string, std::map<std::string, Objects::Function>>& classtemps);
+        void AddBuiltins(std::unordered_map<std::string, Objects::Function>& functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>& classtemps);
     }
 }

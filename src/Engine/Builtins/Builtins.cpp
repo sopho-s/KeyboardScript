@@ -190,14 +190,16 @@ namespace Engine {
         }
 
 
-        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::map<std::string, std::shared_ptr<Objects::Value>> &variables) {
+        Objects::Value ASSIGN(Objects::Value value1, Objects::Value value2, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables) {
             if (!value1.isvar) {
                 return RaiseException("you may not assign a value to an immediate", 1);
             }
             Objects::Value assignment = value2;
             assignment.isvar = true;
             assignment.varname = value1.varname;
-            assignment._functions = value2._functions;
+            if (value1.type != value2.type) {
+                assignment._functions = value2._functions;
+            }
             Objects::Value *store = FindValue(value1, variables);
             *store = assignment;
             return Objects::Value();
@@ -258,7 +260,7 @@ namespace Engine {
         }
 
 
-        Objects::Value BuiltinCall(std::string funcname, std::map<std::string, std::shared_ptr<Objects::Value>> parameters) {
+        Objects::Value BuiltinCall(std::string funcname, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> parameters) {
             if (funcname == "print") {
                 return print(*parameters["printv"]);
             } else if (funcname == "input") {
@@ -367,10 +369,10 @@ namespace Engine {
             return returnvalue;
         }
 
-        Objects::Value* FindValue(Objects::Value value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables) {
+        Objects::Value* FindValue(Objects::Value value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables) {
             std::string origvalue = value.varname;
             Objects::Value *returnvalue;
-            std::map<std::string, std::shared_ptr<Objects::Value>> *currlist = &variables;
+            std::unordered_map<std::string, std::shared_ptr<Objects::Value>> *currlist = &variables;
             int pointloc = Misc::Contains(value.varname, ".");
             if (pointloc != -1) {
                 int prevpointloc = 0;
@@ -401,7 +403,7 @@ namespace Engine {
         }
 
 
-        void AddBuiltins(std::map<std::string, Objects::Function>& functions, std::map<std::string, std::map<std::string, Objects::Function>>& classtemps) {
+        void AddBuiltins(std::unordered_map<std::string, Objects::Function>& functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>& classtemps) {
             functions["print"] = Objects::Function("print", "", 1, {"printv"});
             functions["raise"] = Objects::Function("raise", "", 1, {"what"});
             functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});

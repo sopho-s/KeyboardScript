@@ -2,7 +2,7 @@
 
 namespace Engine {
     namespace Executor {
-        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             bool skip = false;
             for (int i = 0; i < sections.size(); i++) {
                 if (sections[i]->tokens.size() > 0) {
@@ -37,13 +37,13 @@ namespace Engine {
         }
 
         
-        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             std::stack<Objects::Token> values = std::stack<Objects::Token>();
             std::stack<Objects::Token> parameterstack = std::stack<Objects::Token>();
             std::stack<int> braclevels = std::stack<int>();
             std::stack<int> paramcounts = std::stack<int>();
             std::stack<Objects::Function> funcs = std::stack<Objects::Function>();
-            std::map<std::string, std::shared_ptr<Objects::Value>> parameters = std::map<std::string, std::shared_ptr<Objects::Value>>();
+            std::unordered_map<std::string, std::shared_ptr<Objects::Value>> parameters = std::unordered_map<std::string, std::shared_ptr<Objects::Value>>();
             Objects::Value lastresult;
             int braclevel = 0;
             bool isreturn = false;
@@ -127,7 +127,7 @@ namespace Engine {
         }
 
 
-        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             bool passed = true;
             for (int i = 0; i < sections[pointer]->conditions.size(); i++) {
                 Objects::Value pass = EVALUATE(sections[pointer]->conditions, i, variables, functions, classtemp);
@@ -154,7 +154,7 @@ namespace Engine {
         }
 
 
-        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             bool passed = true;
             while (passed) {
                 for (int i = 0; i < sections[pointer]->conditions.size(); i++) {
@@ -189,7 +189,7 @@ namespace Engine {
         }
 
 
-        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             std::shared_ptr<Objects::Value> result = std::shared_ptr<Objects::Value>();
             result = std::make_shared<Objects::Value>(EXECUTE(sections[pointer]->sections, variables, functions, classtemp));
             if (result->isexception) {
@@ -214,7 +214,7 @@ namespace Engine {
         }
 
 
-        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             Objects::Value params[2];
             if (operation != "NOT" && operation != "INCREMENT" && operation != "DECREMENT") {
                 for (int i = 0; i < 2; i++) {
@@ -259,7 +259,7 @@ namespace Engine {
                         return Builtins::LESSER(params[0], params[1]);
                     }
                 } else {
-                    std::map<std::string, std::shared_ptr<Objects::Value>> parameters;
+                    std::unordered_map<std::string, std::shared_ptr<Objects::Value>> parameters;
                     for (int i = 0; i < params[0]._functions[operation].parametercount; i++) {
                         Objects::Value param = Builtins::Copy(params[i]);
                         param.varname = params[0]._functions[operation].parameternames[i];
@@ -274,7 +274,7 @@ namespace Engine {
         }
 
 
-        Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, std::shared_ptr<Objects::Value>> &variables) {
+        Objects::Value ConvertTokenToValue(Objects::Token token, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables) {
             Objects::Value returnvalue;
             switch (token.ident) {
                 case Objects::TokenType::_int:
@@ -340,7 +340,7 @@ namespace Engine {
         }
 
 
-        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, int &braclevel, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, int &braclevel, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             switch (_operator.ident) {
                 case Objects::TokenType::assign: {
                     Objects::Value result = CallBasicOperation(values, "ASSIGN", variables, functions, classtemp);
@@ -490,10 +490,10 @@ namespace Engine {
         }
 
 
-        std::shared_ptr<Objects::Value> FindValue(Objects::Token value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables) {
+        std::shared_ptr<Objects::Value> FindValue(Objects::Token value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables) {
             std::string origvalue = value.value;
             std::shared_ptr<Objects::Value> returnvalue;
-            std::map<std::string, std::shared_ptr<Objects::Value>> currlist = variables;
+            std::unordered_map<std::string, std::shared_ptr<Objects::Value>> currlist = variables;
             int pointloc = Misc::Contains(value.value, ".");
             if (pointloc != -1) {
                 int prevpointloc = 0;
@@ -534,11 +534,11 @@ namespace Engine {
         }
 
 
-        std::pair<Objects::Function, std::shared_ptr<Objects::Value>> FindFunction(Objects::Token value, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions) {
+        std::pair<Objects::Function, std::shared_ptr<Objects::Value>> FindFunction(Objects::Token value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions) {
             std::string origvalue = value.value;
             std::pair<Objects::Function, std::shared_ptr<Objects::Value>> returnpair;
             std::shared_ptr<Objects::Value> returnvalue;
-            std::map<std::string, std::shared_ptr<Objects::Value>> currlist = variables;
+            std::unordered_map<std::string, std::shared_ptr<Objects::Value>> currlist = variables;
             int pointcount = Misc::Count(value.value, ".");
             if (Misc::Count(value.value, ".") >= 1) {
                 int pointloc = Misc::Contains(value.value, ".");
@@ -586,7 +586,7 @@ namespace Engine {
         }
 
 
-        std::pair<Objects::Value, Objects::Function> CreateClass(Objects::Token value, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        std::pair<Objects::Value, Objects::Function> CreateClass(Objects::Token value, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp) {
             std::pair<Objects::Value, Objects::Function> returnvalue;
             returnvalue.first = Builtins::_none();
             returnvalue.second = Objects::Function();

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -94,8 +94,8 @@ namespace Engine {
             float _float = 0;
             bool _bool = true;
             std::string _string = "";
-            std::map<std::string, std::shared_ptr<Value>> _attributes;
-            std::map<std::string, Function> _functions;
+            std::unordered_map<std::string, std::shared_ptr<Value>> _attributes;
+            std::unordered_map<std::string, std::shared_ptr<Function>> _functions;
             Value() {;}
 
 
