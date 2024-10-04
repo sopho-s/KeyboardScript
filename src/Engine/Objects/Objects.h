@@ -112,9 +112,7 @@ namespace Engine {
                 for (std::pair<std::string, std::shared_ptr<Value>> element : val._attributes) {
                     this->_attributes[element.first] = std::make_shared<Objects::Value>(*element.second);
                 }
-                for (std::pair<std::string, Function> element : val._functions) {
-                    this->_functions[element.first] = element.second;
-                }
+                this->_functions = val._functions;
             }
         };
     }

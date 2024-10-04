@@ -1,5 +1,8 @@
-import other
-
 func main() {
-	testfunc();
+	start = time_seconds();
+	i = 0;
+	for (i < 1000) {
+		i += 1;
+	}
+	print(time_seconds() - start);
 }
