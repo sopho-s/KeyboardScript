@@ -6,4 +6,5 @@ target_link_libraries(Executor
     TreeGen
     Objects
     Builtins
-    _String)
+    _String
+    tsl)
