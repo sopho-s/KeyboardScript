@@ -59,7 +59,7 @@ namespace Engine {
         Objects::Value _typeof(Objects::Value value);
 
 
-        Objects::Value _time();
+        Objects::Value _timesec();
 
 
         Objects::Value BuiltinCall(std::string funcname, std::map<std::string, std::shared_ptr<Objects::Value>> parameters);

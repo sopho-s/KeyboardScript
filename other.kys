@@ -1,3 +1,0 @@
-func testfunc() {
-    print("THIS WORKS");
-}

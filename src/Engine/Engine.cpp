@@ -11,10 +11,10 @@ namespace Engine {
         }
         Logging::Log("Lexical analysis was performed successfully");
         std::vector<std::string> imports = TreeGen::FindImport(tokenlist);
-        std::vector<Objects::Section> sections;
+        std::vector<std::shared_ptr<Objects::Section>> sections;
         int temp = 0;
         TreeGen::FindSectionsUntil(tokenlist, sections, Objects::eof, temp);
-        for (Objects::Section section : sections) {
+        for (std::shared_ptr<Objects::Section> section : sections) {
             TreeGen::LogSection(section);
         }
         if (Logging::GetErrorCount() > 0) {

@@ -42,7 +42,7 @@ namespace Engine {
         }
         
         
-        void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index) {
+        void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<std::shared_ptr<Objects::Section>> &out, Objects::TokenType until, int &index) {
             Objects::Token pausetoken = tokens[index]; 
             while (true) {
                 bool _break = false;
@@ -50,37 +50,35 @@ namespace Engine {
                 while (index < tokens.size()) {
                     if (tokens[index].ident == Objects::semi) {
                         SortTokens(section.tokens);
-                        out.push_back(section);
+                        out.push_back(std::make_shared<Objects::Section>(section));
                         section = Objects::Section();
                     } else if (tokens[index].ident == until) {
                         _break = true;
                         SortTokens(section.tokens);
-                        out.push_back(section);
+                        out.push_back(std::make_shared<Objects::Section>(section));
                         break;
                     } else if (tokens[index].ident == Objects::TokenType::_if || tokens[index].ident == Objects::TokenType::_while || tokens[index].ident == Objects::TokenType::_for) {
                         section.tokens.push_back(tokens[index]);
                         index += 2;
                         FindSectionsUntil(tokens, section.conditions, Objects::closebracket, index);
                         for (int i = 0; i < section.conditions.size(); i++) {
-                            SortTokens(section.conditions[i].tokens);
+                            SortTokens(section.conditions[i]->tokens);
                         }
                         index += 2;
                         FindSectionsUntil(tokens, section.sections, Objects::cclosebracket, index);
-                        out.push_back(section);
-                        LogSection(section);
+                        out.push_back(std::make_shared<Objects::Section>(section));
                         section = Objects::Section();
                     } else if (tokens[index].ident == Objects::TokenType::___try) {
                         section.tokens.push_back(tokens[index]);
                         index += 2;
                         FindSectionsUntil(tokens, section.sections, Objects::cclosebracket, index);
-                        out.push_back(section);
-                        LogSection(section);
+                        out.push_back(std::make_shared<Objects::Section>(section));
                         section = Objects::Section();
                     } else if (tokens[index].ident == Objects::copenbracket) {
                         index++;
                         FindSectionsUntil(tokens, section.sections, Objects::cclosebracket, index);
                         SortTokens(section.tokens);
-                        out.push_back(section);
+                        out.push_back(std::make_shared<Objects::Section>(section));
                         section = Objects::Section();
                     } else {
                         section.tokens.push_back(tokens[index]);
@@ -152,45 +150,45 @@ namespace Engine {
         }
 
 
-        void SortSection(Objects::Section &section) {
-            SortTokens(section.tokens);
-            for (Objects::Section sectionsection : section.sections) {
+        void SortSection(std::shared_ptr<Objects::Section> &section) {
+            SortTokens(section->tokens);
+            for (std::shared_ptr<Objects::Section> sectionsection : section->sections) {
                 SortSection(sectionsection);
             }
         }
 
 
-        void LogSection(Objects::Section &section) {
+        void LogSection(std::shared_ptr<Objects::Section> &section) {
             Logging::Log("section:");
-            Lexer::LogTokenList(section.tokens);
-            for (Objects::Section sectionsection : section.sections) {
+            Lexer::LogTokenList(section->tokens);
+            for (std::shared_ptr<Objects::Section> sectionsection : section->sections) {
                 LogSection(sectionsection);
             }
         }
 
 
-        std::map<std::string, Objects::Function> GetAllFunction(std::vector<Objects::Section> &sections) {
+        std::map<std::string, Objects::Function> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections) {
             std::map<std::string, Objects::Function> returnvals;
-            for (Objects::Section section : sections) {
-                if (section.tokens.size() > 0) {
-                    if (section.tokens[0].ident == Objects::func) {
+            for (std::shared_ptr<Objects::Section> section : sections) {
+                if (section->tokens.size() > 0) {
+                    if (section->tokens[0].ident == Objects::func) {
                         Objects::Function newfunc;
-                        newfunc.name = section.tokens[1].value;
+                        newfunc.name = section->tokens[1].value;
                         newfunc.builtin = false;
                         newfunc.exist = true;
                         newfunc._namespace = "main";
-                        if (section.tokens.size() > 2) {
-                            for (int i = 3; i < section.tokens.size() - 1; i++) {
-                                if (section.tokens[i].ident != Objects::comma) {
+                        if (section->tokens.size() > 2) {
+                            for (int i = 3; i < section->tokens.size() - 1; i++) {
+                                if (section->tokens[i].ident != Objects::comma) {
                                     newfunc.parametercount++;
-                                    newfunc.parameternames.push_back(section.tokens[i].value);
+                                    newfunc.parameternames.push_back(section->tokens[i].value);
                                 } else {
                                     break;
                                 }
                             }
                         }
-                        newfunc.function = section.sections;
-                        returnvals[section.tokens[1].value] = newfunc;
+                        newfunc.function = section->sections;
+                        returnvals[section->tokens[1].value] = newfunc;
                     }
                 }
             }
@@ -198,12 +196,12 @@ namespace Engine {
         }
 
 
-        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<Objects::Section> &sections) {
+        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections) {
             std::map<std::string, std::map<std::string, Objects::Function>> returnvals;
-            for (Objects::Section section : sections) {
-                if (section.tokens.size() > 0) {
-                    if (section.tokens[0].ident == Objects::_class) {
-                        returnvals[section.tokens[1].value] = GetAllFunction(section.sections);
+            for (std::shared_ptr<Objects::Section> section : sections) {
+                if (section->tokens.size() > 0) {
+                    if (section->tokens[0].ident == Objects::_class) {
+                        returnvals[section->tokens[1].value] = GetAllFunction(section->sections);
                     }
                 }
             }

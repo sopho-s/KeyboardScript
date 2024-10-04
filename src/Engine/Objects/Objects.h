@@ -43,11 +43,11 @@ namespace Engine {
          */
         struct Section {
             std::vector<Token> tokens;
-            std::vector<Section> sections;
-            std::vector<Section> conditions;
+            std::vector<std::shared_ptr<Section>> sections;
+            std::vector<std::shared_ptr<Section>> conditions;
             Section() {
                 tokens = std::vector<Token>();
-                sections = std::vector<Section>();
+                sections = std::vector<std::shared_ptr<Section>>();
             }
         };
 
@@ -55,7 +55,7 @@ namespace Engine {
         struct Function {
             std::string name;
             std::string _namespace;
-            std::vector<Section> function = std::vector<Section>();
+            std::vector<std::shared_ptr<Section>> function = std::vector<std::shared_ptr<Section>>();
             int parametercount = 0;
             std::vector<std::string> parameternames;
             bool builtin = false;
