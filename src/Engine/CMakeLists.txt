@@ -14,5 +14,4 @@ target_link_libraries(Engine
     Objects
     Builtins
     Executor
-    _String
-    tsl)
+    _String)

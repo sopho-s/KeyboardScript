@@ -4,8 +4,6 @@ project(KeyboardScript)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_subdirectory(includes)
-
 add_subdirectory(Engine)
 
 add_executable(Key main.cpp)
@@ -18,5 +16,4 @@ target_link_libraries(Key
     Lexer
     Engine
     ArgsParse
-    TreeGen
-    sparse)
+    TreeGen)
