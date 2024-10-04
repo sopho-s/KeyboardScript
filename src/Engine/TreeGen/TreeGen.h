@@ -19,7 +19,7 @@ namespace Engine {
          * @param until The end token
          * @param index The start index
          */
-        void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<Objects::Section> &out, Objects::TokenType until, int &index);
+        void FindSectionsUntil(std::vector<Objects::Token> tokens, std::vector<std::shared_ptr<Objects::Section>> &out, Objects::TokenType until, int &index);
 
 
         /**
@@ -35,7 +35,7 @@ namespace Engine {
          * 
          * @param section The section to be sorted
          */
-        void SortSection(Objects::Section &section);
+        void SortSection(std::shared_ptr<Objects::Section> &section);
 
 
         /**
@@ -43,12 +43,12 @@ namespace Engine {
          * 
          * @param section The section to be debugged
          */
-        void LogSection(Objects::Section &section);
+        void LogSection(std::shared_ptr<Objects::Section> &section);
 
 
-        std::map<std::string, Objects::Function> GetAllFunction(std::vector<Objects::Section> &sections);
+        std::map<std::string, Objects::Function> GetAllFunction(std::vector<std::shared_ptr<Objects::Section>> &sections);
 
 
-        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<Objects::Section> &sections);
+        std::map<std::string, std::map<std::string, Objects::Function>> GetAllClasses(std::vector<std::shared_ptr<Objects::Section>> &sections);
     }
 }

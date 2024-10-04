@@ -20,7 +20,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the sections
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value EXECUTE(std::vector<Objects::Section> &sections, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
+        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
         /**
@@ -33,7 +33,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value EVALUATE(std::vector<Objects::Section> &sections, int pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
+        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
         /**
@@ -46,7 +46,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value IF(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
+        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
         /**
@@ -59,7 +59,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value WHILE(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
+        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
         /**
@@ -72,22 +72,29 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value TRY(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
+        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
         /**
          * @brief Attemps to perform the basic operations
          * 
-         * @param values 
-         * @param operation 
-         * @param variables 
-         * @param functions 
-         * @param classtemp 
-         * @return Objects::Value 
+         * @param values The stack storing the values that contain the values for the operations
+         * @param operation The operation to be performed
+         * @param variables The variables to be used with the tokens
+         * @param functions The functions to be used with the tokens
+         * @param classtemp The class templates to be used with the tokens
+         * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
         Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp);
 
 
+        /**
+         * @brief Converts a token object to a value object
+         * 
+         * @param token The token to be converted
+         * @param variables The variables to be used when converting
+         * @return Objects::Value The end value
+         */
         Objects::Value ConvertTokenToValue(Objects::Token token, std::map<std::string, std::shared_ptr<Objects::Value>> &variables);
 
 

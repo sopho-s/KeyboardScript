@@ -1,6 +1,10 @@
 build/
 .vscode/
 .doxygen/
+<<<<<<< HEAD
 callgrind*
+=======
+call*
+>>>>>>> 4e178073ade414e3e28bbceb3a27e02289c54a31
 Call*
 valgrind*

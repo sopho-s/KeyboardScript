@@ -2,13 +2,13 @@
 
 namespace Engine {
     namespace Executor {
-        Objects::Value EXECUTE(std::vector<Objects::Section> &sections, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             bool skip = false;
             for (int i = 0; i < sections.size(); i++) {
-                if (sections[i].tokens.size() > 0) {
+                if (sections[i]->tokens.size() > 0) {
                     if (!skip) {
                         Objects::Value out;
-                        switch (sections[i].tokens[0].ident) {
+                        switch (sections[i]->tokens[0].ident) {
                             case Objects::TokenType::_if:
                                 out = IF(sections, i, variables, functions, classtemp);
                                 break;
@@ -37,7 +37,7 @@ namespace Engine {
         }
 
         
-        Objects::Value EVALUATE(std::vector<Objects::Section> &sections, int pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             std::stack<Objects::Token> values = std::stack<Objects::Token>();
             std::stack<Objects::Token> parameterstack = std::stack<Objects::Token>();
             std::stack<int> braclevels = std::stack<int>();
@@ -47,7 +47,7 @@ namespace Engine {
             Objects::Value lastresult;
             int braclevel = 0;
             bool isreturn = false;
-            for (Objects::Token value : sections[pointer].tokens) {
+            for (Objects::Token value : sections[pointer]->tokens) {
                 Lexer::LogToken(value);
                 if (value.ident == Objects::TokenType::_return) {
                     isreturn = true;
@@ -127,10 +127,10 @@ namespace Engine {
         }
 
 
-        Objects::Value IF(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             bool passed = true;
-            for (int i = 0; i < sections[pointer].conditions.size(); i++) {
-                Objects::Value pass = EVALUATE(sections[pointer].conditions, i, variables, functions, classtemp);
+            for (int i = 0; i < sections[pointer]->conditions.size(); i++) {
+                Objects::Value pass = EVALUATE(sections[pointer]->conditions, i, variables, functions, classtemp);
                 if (pass.isexception || pass.isreturn) {
                     return pass;
                 }
@@ -140,11 +140,11 @@ namespace Engine {
                 }
             }
             if (passed) {
-                return EXECUTE(sections[pointer].sections, variables, functions, classtemp);
+                return EXECUTE(sections[pointer]->sections, variables, functions, classtemp);
             } else {
                 if (sections.size() > pointer + 1) { 
-                    if (sections[pointer + 1].tokens.size() > 0) {
-                        if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
+                    if (sections[pointer + 1]->tokens.size() > 0) {
+                        if (sections[pointer + 1]->tokens[0].ident == Objects::TokenType::_else) {
                             return IF(sections, ++pointer, variables, functions, classtemp);
                         }
                     }
@@ -154,11 +154,11 @@ namespace Engine {
         }
 
 
-        Objects::Value WHILE(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             bool passed = true;
             while (passed) {
-                for (int i = 0; i < sections[pointer].conditions.size(); i++) {
-                    Objects::Value pass = EVALUATE(sections[pointer].conditions, i, variables, functions, classtemp);
+                for (int i = 0; i < sections[pointer]->conditions.size(); i++) {
+                    Objects::Value pass = EVALUATE(sections[pointer]->conditions, i, variables, functions, classtemp);
                     if (pass.isexception || pass.isreturn) {
                         return pass;
                     }
@@ -168,14 +168,14 @@ namespace Engine {
                     }
                 }
                 if (passed) {
-                    Objects::Value result = EXECUTE(sections[pointer].sections, variables, functions, classtemp);
+                    Objects::Value result = EXECUTE(sections[pointer]->sections, variables, functions, classtemp);
                     if (result.isexception || result.isreturn) {
                         return result;
                     }
                 } else {
                     if (sections.size() > pointer + 1) { 
-                        if (sections[pointer + 1].tokens.size() > 0) {
-                            if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
+                        if (sections[pointer + 1]->tokens.size() > 0) {
+                            if (sections[pointer + 1]->tokens[0].ident == Objects::TokenType::_else) {
                                 Objects::Value result = WHILE(sections, ++pointer, variables, functions, classtemp);
                                 if (result.isexception || result.isreturn) {
                                     return result;
@@ -189,15 +189,15 @@ namespace Engine {
         }
 
 
-        Objects::Value TRY(std::vector<Objects::Section> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
+        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
             std::shared_ptr<Objects::Value> result = std::shared_ptr<Objects::Value>();
-            result = std::make_shared<Objects::Value>(EXECUTE(sections[pointer].sections, variables, functions, classtemp));
+            result = std::make_shared<Objects::Value>(EXECUTE(sections[pointer]->sections, variables, functions, classtemp));
             if (result->isexception) {
                 variables["ex"] = result;
                 if (sections.size() > pointer + 1) { 
-                    if (sections[pointer + 1].tokens.size() > 0) {
-                        if (sections[pointer + 1].tokens[0].ident == Objects::TokenType::_else) {
-                            Objects::Value result = EXECUTE(sections[pointer + 1].sections, variables, functions, classtemp);
+                    if (sections[pointer + 1]->tokens.size() > 0) {
+                        if (sections[pointer + 1]->tokens[0].ident == Objects::TokenType::_else) {
+                            Objects::Value result = EXECUTE(sections[pointer + 1]->sections, variables, functions, classtemp);
                             if (result.isexception || result.isreturn) {
                                 return result;
                             }
@@ -215,14 +215,14 @@ namespace Engine {
 
 
         Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::map<std::string, std::shared_ptr<Objects::Value>> &variables, std::map<std::string, Objects::Function> &functions, std::map<std::string, std::map<std::string, Objects::Function>> &classtemp) {
-            std::vector<Objects::Value> params;
+            Objects::Value params[2];
             if (operation != "NOT" && operation != "INCREMENT" && operation != "DECREMENT") {
                 for (int i = 0; i < 2; i++) {
-                    params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
+                    params[1-i] = ConvertTokenToValue(values.top(), variables);
                     values.pop();
                 }
             } else {
-                params.insert(params.begin(), ConvertTokenToValue(values.top(), variables));
+                params[0] = ConvertTokenToValue(values.top(), variables);
                 values.pop();
             }
             if (params[0]._functions.find(operation) != params[0]._functions.end()) {
