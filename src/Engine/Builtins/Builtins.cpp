@@ -28,6 +28,28 @@ namespace Engine {
         }
 
 
+        Objects::Value ToInt(Objects::Value value) {
+            if (value.type == "int") {
+                return value;
+            } else if (value.type == "string") {
+                value._int = std::stoi(value._string);
+                value._string = "";
+                value.type = "int";
+                return value;
+            } else if (value.type == "bool") {
+                value._int = (value._bool) ? 1 : 0;
+                value._bool = true;
+                value.type = "int";
+                return value;
+            } else if (value.type == "float") {
+                value._int = (int)value._float;
+                value._float = 0;
+                value.type = "string";
+                return value;
+            }
+        }
+
+
         Objects::Value ADD(Objects::Value value1, Objects::Value value2) {
             Objects::Value returnvalue;
             if (value1.type == "string" || value2.type == "string") {
@@ -96,6 +118,18 @@ namespace Engine {
         }
 
 
+        Objects::Value MOD(Objects::Value value1, Objects::Value value2) {
+            Objects::Value returnvalue;
+            if (value1.type == "int" && value2.type == "int") {
+                returnvalue = _int();
+                returnvalue._int = value1._int % value2._int;
+                returnvalue.type = "int";
+                returnvalue.isvar = false;
+            }
+            return returnvalue;
+        }
+
+
         Objects::Value EQUAL(Objects::Value value1, Objects::Value value2) {
             Objects::Value temp;
             temp = _bool();
@@ -124,7 +158,7 @@ namespace Engine {
                 temp._bool = value1._float >= value2._int;
             } else if (value1.type == "float" && value2.type == "float") {
                 temp._bool = value1._float >= value2._float;
-            } else if (value1.type == "int" && value2.type == "int") {
+            } else if (value1.type == "int" && value2.type == "float") {
                 temp._bool = value1._int >= value2._float;
             } else {
                 return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
@@ -143,7 +177,7 @@ namespace Engine {
                 temp._bool = value1._float <= value2._int;
             } else if (value1.type == "float" && value2.type == "float") {
                 temp._bool = value1._float <= value2._float;
-            } else if (value1.type == "int" && value2.type == "int") {
+            } else if (value1.type == "int" && value2.type == "float") {
                 temp._bool = value1._int <= value2._float;
             } else {
                 return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
@@ -162,7 +196,7 @@ namespace Engine {
                 temp._bool = value1._float < value2._int;
             } else if (value1.type == "float" && value2.type == "float") {
                 temp._bool = value1._float < value2._float;
-            } else if (value1.type == "int" && value2.type == "int") {
+            } else if (value1.type == "int" && value2.type == "float") {
                 temp._bool = value1._int < value2._float;
             } else {
                 return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
@@ -181,7 +215,7 @@ namespace Engine {
                 temp._bool = value1._float > value2._int;
             } else if (value1.type == "float" && value2.type == "float") {
                 temp._bool = value1._float > value2._float;
-            } else if (value1.type == "int" && value2.type == "int") {
+            } else if (value1.type == "int" && value2.type == "float") {
                 temp._bool = value1._int > value2._float;
             } else {
                 return RaiseException("type \"" + value1.type + "\" may not be compared with \"" + value2.type + "\"", 2);
@@ -224,6 +258,25 @@ namespace Engine {
         Objects::Value print(Objects::Value printv) {
             std::cout << ToString(printv)._string << std::endl;
             return Objects::Value();
+        }
+
+
+        Objects::Value pow(Objects::Value value1, Objects::Value value2) {
+            Objects::Value temp;
+            temp.type = "float";
+            temp = _float();
+            if (value1.type == "int" && value2.type == "int") {
+                temp._float = (float)std::pow(value1._int, value2._int);
+            } else if (value1.type == "float" && value2.type == "int") {
+               temp._float = (float)std::pow(value1._float, value2._int);
+            } else if (value1.type == "float" && value2.type == "float") {
+                temp._float = (float)std::pow(value1._float, value2._float);
+            } else if (value1.type == "int" && value2.type == "float") {
+                temp._float = (float)std::pow(value1._int, value2._float);
+            } else {
+                return RaiseException("type \"" + value1.type + "\" or \"" + value2.type + "\" may not use pow", 2);
+            }
+            return temp;
         }
 
 
@@ -271,8 +324,12 @@ namespace Engine {
                 return raise(*parameters["what"]);
             } else if (funcname == "to_string") {
                 return ToString(*parameters["var"]);
+            } else if (funcname == "to_int") {
+                return ToInt(*parameters["var"]);
             } else if (funcname == "time_seconds") {
                 return _timesec();
+            } else if (funcname == "pow") {
+                return pow(*parameters["n"], *parameters["power"]);
             }
             return Objects::Value();
         }
@@ -297,11 +354,13 @@ namespace Engine {
             returnvalue._functions["SUB"] = std::make_shared<Objects::Function>(Objects::Function("SUB", "", 2));
             returnvalue._functions["MUL"] = std::make_shared<Objects::Function>(Objects::Function("MUL", "", 2));
             returnvalue._functions["DIV"] = std::make_shared<Objects::Function>(Objects::Function("DIV", "", 2));
+            returnvalue._functions["MOD"] = std::make_shared<Objects::Function>(Objects::Function("MOD", "", 2));
             returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
             returnvalue._functions["ADDASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ADDASSIGN", "", 2));
             returnvalue._functions["SUBASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("SUBASSIGN", "", 2));
             returnvalue._functions["DIVASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("DIVASSIGN", "", 2));
             returnvalue._functions["MULASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("MULASSIGN", "", 2));
+            returnvalue._functions["MODASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("MODASSIGN", "", 2));
             returnvalue._functions["EQUAL"] = std::make_shared<Objects::Function>(Objects::Function("EQUAL", "", 2));
             returnvalue._functions["NOTEQUAL"] = std::make_shared<Objects::Function>(Objects::Function("NOTEQUAL", "", 2));
             returnvalue._functions["GREATEREQUAL"] = std::make_shared<Objects::Function>(Objects::Function("GREATEREQUAL", "", 2));
@@ -410,6 +469,8 @@ namespace Engine {
             functions["input"] = std::make_shared<Objects::Function>(Objects::Function("input", "", 0));
             functions["time_seconds"] = std::make_shared<Objects::Function>(Objects::Function("time_seconds", "", 0));
             functions["to_string"] = std::make_shared<Objects::Function>(Objects::Function("to_string", "", 1, {"var"}));
+            functions["to_int"] = std::make_shared<Objects::Function>(Objects::Function("to_int", "", 1, {"var"}));
+            functions["pow"] = std::make_shared<Objects::Function>(Objects::Function("pow", "", 2, {"n", "power"}));
         }
     }
 }

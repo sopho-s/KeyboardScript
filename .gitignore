@@ -4,3 +4,4 @@ build/
 callgrind*
 Call*
 valgrind*
+call*

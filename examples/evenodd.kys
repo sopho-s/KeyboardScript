@@ -1,0 +1,17 @@
+func iseven(number) {
+    if (number % 2 == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+func main() {
+    print("enter a number");
+    number = to_int(input());
+    if (iseven(number)) {
+        print("is even");
+    } else {
+        print("is odd");
+    }
+}

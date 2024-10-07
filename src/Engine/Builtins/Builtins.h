@@ -4,11 +4,15 @@
 #include "../Logging/Errors.h"
 #include <iostream>
 #include <time.h>
+#include <math.h>
 #include "../Misc/String.h"
 
 namespace Engine {
     namespace Builtins {
         Objects::Value ToString(Objects::Value value);
+
+
+        Objects::Value ToInt(Objects::Value value);
 
 
         Objects::Value ADD(Objects::Value value1, Objects::Value value2);
@@ -21,6 +25,9 @@ namespace Engine {
 
 
         Objects::Value DIV(Objects::Value value1, Objects::Value value2);
+
+
+        Objects::Value MOD(Objects::Value value1, Objects::Value value2);
 
 
         Objects::Value EQUAL(Objects::Value value1, Objects::Value value2);
@@ -48,6 +55,9 @@ namespace Engine {
 
 
         Objects::Value print(Objects::Value value);
+
+
+        Objects::Value pow(Objects::Value value1, Objects::Value value2);
 
 
         Objects::Value input();

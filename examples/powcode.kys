@@ -1,0 +1,7 @@
+func main() {
+    n = 3;
+    power = 3;
+    print(n);
+    result = pow(n, power);
+    print(result);
+}

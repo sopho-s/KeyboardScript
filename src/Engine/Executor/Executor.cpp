@@ -237,6 +237,8 @@ namespace Engine {
                         return Builtins::ASSIGN(params[0], Builtins::DIV(params[0], params[1]), variables);
                     } else if (operation == "MULASSIGN") {
                         return Builtins::ASSIGN(params[0], Builtins::MUL(params[0], params[1]), variables);
+                    } else if (operation == "MODASSIGN") {
+                        return Builtins::ASSIGN(params[0], Builtins::MOD(params[0], params[1]), variables);
                     } else if (operation == "EQUAL") {
                         return Builtins::EQUAL(params[0], params[1]);
                     } else if (operation == "NOTEQUAL") {
@@ -249,6 +251,8 @@ namespace Engine {
                         return Builtins::DIV(params[0], params[1]);
                     } else if (operation == "MUL") {
                         return Builtins::MUL(params[0], params[1]);
+                    } else if (operation == "MOD") {
+                        return Builtins::MOD(params[0], params[1]);
                     } else if (operation == "GREATEREQUAL") {
                         return Builtins::GREATEREQUAL(params[0], params[1]);
                     } else if (operation == "LESSEREQUAL") {
@@ -387,6 +391,15 @@ namespace Engine {
                     }
                     break;
                 }
+                case Objects::TokenType::modassign: {
+                    Objects::Value result = CallBasicOperation(values, "MODASSIGN", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
                 case Objects::TokenType::add: {
                     Objects::Value result = CallBasicOperation(values, "ADD", variables, functions, classtemp);
                     if (result.isexception || result.isreturn) {
@@ -416,6 +429,15 @@ namespace Engine {
                 }
                 case Objects::TokenType::div: {
                     Objects::Value result = CallBasicOperation(values, "DIV", variables, functions, classtemp);
+                    if (result.isexception || result.isreturn) {
+                        return result;
+                    } else {
+                        values.push(ConvertValueToToken(&result));
+                    }
+                    break;
+                }
+                case Objects::TokenType::mod: {
+                    Objects::Value result = CallBasicOperation(values, "MOD", variables, functions, classtemp);
                     if (result.isexception || result.isreturn) {
                         return result;
                     } else {

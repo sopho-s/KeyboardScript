@@ -89,6 +89,7 @@ namespace Engine {
                     return;
                 } else {
                     Logging::Log(Logging::Error(pausetoken.column, pausetoken.row, 3, pausetoken.value + " is not closed"));
+                    Logging::Log((int)until);
                     return;
                 }
             }
