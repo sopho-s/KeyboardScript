@@ -86,6 +86,6 @@ namespace Engine {
         Objects::Value* FindValue(Objects::Value value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables);
 
 
-        void AddBuiltins(std::unordered_map<std::string, Objects::Function>& functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>& classtemps);
+        void AddBuiltins(std::unordered_map<std::string, std::shared_ptr<Objects::Function>>& functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>>& classtemps);
     }
 }

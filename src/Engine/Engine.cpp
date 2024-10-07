@@ -7,7 +7,7 @@ namespace Engine {
         Lexer::Analysis(_args.filename + ".kys", tokenlist);
         if (Logging::GetErrorCount() > 0) {
             Logging::Log(Logging::Error(-1, -1, -1, "an error occured during lexical analysis"));
-            return std::pair<std::unordered_map<std::string, Objects::Function>, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>>();
+            return std::pair<std::unordered_map<std::string, std::shared_ptr<Objects::Function>>, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>>>();
         }
         Logging::Log("Lexical analysis was performed successfully");
         std::vector<std::string> imports = TreeGen::FindImport(tokenlist);
@@ -19,7 +19,7 @@ namespace Engine {
         }
         if (Logging::GetErrorCount() > 0) {
             Logging::Log(Logging::Error(-1, -1, -1, "an error occured during abstract tree generation"));
-            return std::pair<std::unordered_map<std::string, Objects::Function>, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>>();
+            return std::pair<std::unordered_map<std::string, std::shared_ptr<Objects::Function>>, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>>>();
         }
         Logging::Log("Abstract syntax tree generation was performed successfully");
         std::unordered_map<std::string, std::shared_ptr<Objects::Function>> functions = TreeGen::GetAllFunction(sections);
@@ -27,7 +27,7 @@ namespace Engine {
         for (std::string import : imports) {
             auto filecontent = AnalyseFile(args(import, _args.erroff, _args.warnoff, _args.infooff));
             for (auto element : filecontent.first) {
-                functions[element.first] = std::make_shared<Objects::Function>(element.second);
+                functions[element.first] = element.second;
             }
             for (auto element : filecontent.second) {
                 classtemps[element.first] = element.second;
@@ -41,7 +41,7 @@ namespace Engine {
 
     void RunCode(std::unordered_map<std::string, std::shared_ptr<Objects::Function>> functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> classtemps) {
         std::unordered_map<std::string, std::shared_ptr<Objects::Value>> values;
-        Objects::Value out = Executor::EXECUTE(functions["main"].function, values, functions, classtemps);
+        Objects::Value out = Executor::EXECUTE(functions["main"]->function, values, functions, classtemps);
         if (!out.isexception) {
             Logging::Log("Execution was performed successfully");
         } else {

@@ -20,7 +20,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the sections
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value EXECUTE(std::vector<std::shared_ptr<Objects::Section>> &sections, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -33,7 +33,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value EVALUATE(std::vector<std::shared_ptr<Objects::Section>> &sections, int pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -46,7 +46,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value IF(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -59,7 +59,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value WHILE(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -72,7 +72,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value TRY(std::vector<std::shared_ptr<Objects::Section>> &sections, int &pointer, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -85,7 +85,7 @@ namespace Engine {
          * @param classtemp The class templates to be used with the tokens
          * @return Objects::Value This will be 3 things, the return value of a function, an exception, or a variable storing whether the execution was truthful
          */
-        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value CallBasicOperation(std::stack<Objects::Token> &values, std::string operation, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         /**
@@ -101,15 +101,15 @@ namespace Engine {
         Objects::Token ConvertValueToToken(Objects::Value *token);
 
 
-        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions, int &braclevel, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        Objects::Value EvaluateOperator(Objects::Token &_operator, std::stack<Objects::Token> &values, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions, int &braclevel, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
 
 
         std::shared_ptr<Objects::Value> FindValue(Objects::Token value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables);
 
 
-        std::pair<Objects::Function, std::shared_ptr<Objects::Value>> FindFunction(Objects::Token value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, Objects::Function> &functions);
+        std::pair<std::shared_ptr<Objects::Function>, std::shared_ptr<Objects::Value>> FindFunction(Objects::Token value, std::unordered_map<std::string, std::shared_ptr<Objects::Value>> &variables, std::unordered_map<std::string, std::shared_ptr<Objects::Function>> &functions);
 
 
-        std::pair<Objects::Value, Objects::Function> CreateClass(Objects::Token value, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> &classtemp);
+        std::pair<Objects::Value, std::shared_ptr<Objects::Function>> CreateClass(Objects::Token value, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> &classtemp);
     }
 }

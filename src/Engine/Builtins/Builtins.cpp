@@ -281,11 +281,11 @@ namespace Engine {
         Objects::Value _string() {
             Objects::Value returnvalue;
             returnvalue.type = "string";
-            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
-            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
-            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
+            returnvalue._functions["ADDASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ADDASSIGN", "", 2));
+            returnvalue._functions["ADD"] = std::make_shared<Objects::Function>(Objects::Function("ADD", "", 2));
+            returnvalue._functions["EQUAL"] = std::make_shared<Objects::Function>(Objects::Function("EQUAL", "", 2));
+            returnvalue._functions["NOTEQUAL"] = std::make_shared<Objects::Function>(Objects::Function("NOTEQUAL", "", 2));
             return returnvalue;
         }
 
@@ -293,30 +293,30 @@ namespace Engine {
         Objects::Value _int() {
             Objects::Value returnvalue;
             returnvalue.type = "int";
-            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-            returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
-            returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
-            returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
-            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
-            returnvalue._functions["SUBASSIGN"] = Objects::Function("SUBASSIGN", "", 2);
-            returnvalue._functions["DIVASSIGN"] = Objects::Function("DIVASSIGN", "", 2);
-            returnvalue._functions["MULASSIGN"] = Objects::Function("MULASSIGN", "", 2);
-            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
-            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
-            returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);
-            returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
-            returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
-            returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            returnvalue._functions["ADD"] = std::make_shared<Objects::Function>(Objects::Function("ADD", "", 2));
+            returnvalue._functions["SUB"] = std::make_shared<Objects::Function>(Objects::Function("SUB", "", 2));
+            returnvalue._functions["MUL"] = std::make_shared<Objects::Function>(Objects::Function("MUL", "", 2));
+            returnvalue._functions["DIV"] = std::make_shared<Objects::Function>(Objects::Function("DIV", "", 2));
+            returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
+            returnvalue._functions["ADDASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ADDASSIGN", "", 2));
+            returnvalue._functions["SUBASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("SUBASSIGN", "", 2));
+            returnvalue._functions["DIVASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("DIVASSIGN", "", 2));
+            returnvalue._functions["MULASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("MULASSIGN", "", 2));
+            returnvalue._functions["EQUAL"] = std::make_shared<Objects::Function>(Objects::Function("EQUAL", "", 2));
+            returnvalue._functions["NOTEQUAL"] = std::make_shared<Objects::Function>(Objects::Function("NOTEQUAL", "", 2));
+            returnvalue._functions["GREATEREQUAL"] = std::make_shared<Objects::Function>(Objects::Function("GREATEREQUAL", "", 2));
+            returnvalue._functions["LESSEREQUAL"] = std::make_shared<Objects::Function>(Objects::Function("LESSEREQUAL", "", 2));
+            returnvalue._functions["LESSER"] = std::make_shared<Objects::Function>(Objects::Function("LESSER", "", 2));
+            returnvalue._functions["GREATER"] = std::make_shared<Objects::Function>(Objects::Function("GREATER", "", 2));
             return returnvalue;
         }
 
 
         Objects::Value _bool() {
             Objects::Value returnvalue;
-            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
-            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
+            returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
+            returnvalue._functions["EQUAL"] = std::make_shared<Objects::Function>(Objects::Function("EQUAL", "", 2));
+            returnvalue._functions["NOTEQUAL"] = std::make_shared<Objects::Function>(Objects::Function("NOTEQUAL", "", 2));
             returnvalue.type = "bool";
             return returnvalue;
         }
@@ -325,21 +325,21 @@ namespace Engine {
         Objects::Value _float() {
             Objects::Value returnvalue;
             returnvalue.type = "float";
-            returnvalue._functions["ADD"] = Objects::Function("ADD", "", 2);
-            returnvalue._functions["SUB"] = Objects::Function("SUB", "", 2);
-            returnvalue._functions["MUL"] = Objects::Function("MUL", "", 2);
-            returnvalue._functions["DIV"] = Objects::Function("DIV", "", 2);
-            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
-            returnvalue._functions["ADDASSIGN"] = Objects::Function("ADDASSIGN", "", 2);
-            returnvalue._functions["SUBASSIGN"] = Objects::Function("SUBASSIGN", "", 2);
-            returnvalue._functions["DIVASSIGN"] = Objects::Function("DIVASSIGN", "", 2);
-            returnvalue._functions["MULASSIGN"] = Objects::Function("MULASSIGN", "", 2);
-            returnvalue._functions["EQUAL"] = Objects::Function("EQUAL", "", 2);
-            returnvalue._functions["NOTEQUAL"] = Objects::Function("NOTEQUAL", "", 2);
-            returnvalue._functions["GREATEREQUAL"] = Objects::Function("GREATEREQUAL", "", 2);
-            returnvalue._functions["LESSEREQUAL"] = Objects::Function("LESSEREQUAL", "", 2);
-            returnvalue._functions["LESSER"] = Objects::Function("LESSER", "", 2);
-            returnvalue._functions["GREATER"] = Objects::Function("GREATER", "", 2);
+            returnvalue._functions["ADD"] = std::make_shared<Objects::Function>(Objects::Function("ADD", "", 2));
+            returnvalue._functions["SUB"] = std::make_shared<Objects::Function>(Objects::Function("SUB", "", 2));
+            returnvalue._functions["MUL"] = std::make_shared<Objects::Function>(Objects::Function("MUL", "", 2));
+            returnvalue._functions["DIV"] = std::make_shared<Objects::Function>(Objects::Function("DIV", "", 2));
+            returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
+            returnvalue._functions["ADDASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ADDASSIGN", "", 2));
+            returnvalue._functions["SUBASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("SUBASSIGN", "", 2));
+            returnvalue._functions["DIVASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("DIVASSIGN", "", 2));
+            returnvalue._functions["MULASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("MULASSIGN", "", 2));
+            returnvalue._functions["EQUAL"] = std::make_shared<Objects::Function>(Objects::Function("EQUAL", "", 2));
+            returnvalue._functions["NOTEQUAL"] = std::make_shared<Objects::Function>(Objects::Function("NOTEQUAL", "", 2));
+            returnvalue._functions["GREATEREQUAL"] = std::make_shared<Objects::Function>(Objects::Function("GREATEREQUAL", "", 2));
+            returnvalue._functions["LESSEREQUAL"] = std::make_shared<Objects::Function>(Objects::Function("LESSEREQUAL", "", 2));
+            returnvalue._functions["LESSER"] = std::make_shared<Objects::Function>(Objects::Function("LESSER", "", 2));
+            returnvalue._functions["GREATER"] = std::make_shared<Objects::Function>(Objects::Function("GREATER", "", 2));
             return returnvalue;
         }
 
@@ -347,7 +347,7 @@ namespace Engine {
         Objects::Value _none() {
             Objects::Value returnvalue;
             returnvalue.type = "none";
-            returnvalue._functions["ASSIGN"] = Objects::Function("ASSIGN", "", 2);
+            returnvalue._functions["ASSIGN"] = std::make_shared<Objects::Function>(Objects::Function("ASSIGN", "", 2));
             return returnvalue;
         }
 
@@ -403,13 +403,13 @@ namespace Engine {
         }
 
 
-        void AddBuiltins(std::unordered_map<std::string, Objects::Function>& functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>>& classtemps) {
-            functions["print"] = Objects::Function("print", "", 1, {"printv"});
-            functions["raise"] = Objects::Function("raise", "", 1, {"what"});
-            functions["typeof"] = Objects::Function("typeof", "", 1, {"var"});
-            functions["input"] = Objects::Function("input", "", 0);
-            functions["time_seconds"] = Objects::Function("time_seconds", "", 0);
-            functions["to_string"] = Objects::Function("to_string", "", 1, {"var"});
+        void AddBuiltins(std::unordered_map<std::string, std::shared_ptr<Objects::Function>>& functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>>& classtemps) {
+            functions["print"] = std::make_shared<Objects::Function>(Objects::Function("print", "", 1, {"printv"}));
+            functions["raise"] = std::make_shared<Objects::Function>(Objects::Function("raise", "", 1, {"what"}));
+            functions["typeof"] = std::make_shared<Objects::Function>(Objects::Function("typeof", "", 1, {"var"}));
+            functions["input"] = std::make_shared<Objects::Function>(Objects::Function("input", "", 0));
+            functions["time_seconds"] = std::make_shared<Objects::Function>(Objects::Function("time_seconds", "", 0));
+            functions["to_string"] = std::make_shared<Objects::Function>(Objects::Function("to_string", "", 1, {"var"}));
         }
     }
 }

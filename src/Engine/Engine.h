@@ -17,5 +17,5 @@ namespace Engine {
     std::pair<std::unordered_map<std::string, std::shared_ptr<Objects::Function>>, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>>> AnalyseFile(args _args);
 
     
-    void RunCode(std::unordered_map<std::string, Objects::Function> functions, std::unordered_map<std::string, std::unordered_map<std::string, Objects::Function>> classtemps);
+    void RunCode(std::unordered_map<std::string, std::shared_ptr<Objects::Function>> functions, std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<Objects::Function>>> classtemps);
 }
